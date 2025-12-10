@@ -1,0 +1,27 @@
+{
+  "artistId": "lunatatoo",
+  "displayName": "Luna Tattoo",
+  "logoUrl": null,
+  "colors": {
+    "primary": "#7B68A6",
+    "secondary": "#E8B4B8"
+  },
+  "bookingUrl": "https://calendly.com/lunatattoo",
+  "instagramHandle": "@lunatattoo",
+  "submission": {
+    "method": "formspree",
+    "formId": "YOUR_FORMSPREE_ID"
+  },
+  "options": {
+    "budgetRanges": [
+      { "value": "under_300", "label": "Under $300" },
+      { "value": "300_600", "label": "$300 to $600" },
+      { "value": "600_1200", "label": "$600 to $1,200" },
+      { "value": "1200_plus", "label": "$1,200+" },
+      { "value": "discuss", "label": "Let's discuss" }
+    ],
+    "showInstagram": true,
+    "showPhone": true,
+    "requireReferences": false
+  }
+}

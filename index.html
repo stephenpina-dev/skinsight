@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Discover your tattoo archetype. A client intake quiz for tattoo artists.">
+  <title>Skin Sight - Discover Your Tattoo Archetype</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Skip Link for Accessibility -->
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar-container" id="progress-container" aria-hidden="true">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <main id="main">
+    <!-- ==================== LANDING SCREEN ==================== -->
+    <section id="landing" class="screen active">
+      <div class="container">
+        <div class="logo-area" id="logo-area">
+          <!-- Logo or text inserted via JS based on config -->
+          <h1 class="logo-text" id="logo-text">Skin Sight</h1>
+        </div>
+
+        <div class="intro">
+          <h2>Discover your tattoo archetype</h2>
+          <p class="text-secondary">12 questions. 2 minutes. A clearer path to your next piece.</p>
+        </div>
+
+        <button class="btn btn-primary btn-large" id="begin-btn">
+          Begin
+        </button>
+
+        <p class="text-tiny text-muted powered-by">
+          Powered by Skin Sight
+        </p>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 1: YOUR INTUITION ==================== -->
+    <section id="section-intuition" class="screen quiz-section" data-section="intuition">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-number">1 of 3</span>
+          <h2 class="section-title">Your Intuition</h2>
+          <p class="section-subtitle text-secondary">Do you know yourself?</p>
+        </div>
+
+        <div class="questions-container" id="questions-intuition">
+          <!-- Question 1: Incubation -->
+          <div class="question-card" data-question-id="incubation" data-section="intuition">
+            <h3 class="question-label">How long has this idea been living with you?</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="incubation" value="2" />
+                <span class="bubble-text">It just found me</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="incubation" value="5" />
+                <span class="bubble-text">It's been brewing for a while</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="incubation" value="9" />
+                <span class="bubble-text">Years. It's part of me now.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 2: Permanence Comfort -->
+          <div class="question-card" data-question-id="permanence_comfort" data-section="intuition">
+            <h3 class="question-label">How do you feel about forever?</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="permanence_comfort" value="2" />
+                <span class="bubble-text">Honestly, it's a big word</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="permanence_comfort" value="5" />
+                <span class="bubble-text">I'm getting more comfortable with it</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="permanence_comfort" value="9" />
+                <span class="bubble-text">I trust my choices to last</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 3: Body Intuition -->
+          <div class="question-card" data-question-id="body_intuition" data-section="intuition">
+            <h3 class="question-label">How well do you know what your body can handle?</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="body_intuition" value="2" />
+                <span class="bubble-text">Still learning</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="body_intuition" value="5" />
+                <span class="bubble-text">I have a decent sense</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="body_intuition" value="9" />
+                <span class="bubble-text">I know my limits</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 4: Canvas State -->
+          <div class="question-card" data-question-id="canvas_state" data-section="intuition">
+            <h3 class="question-label">Your skin so far...</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="canvas_state" value="2" />
+                <span class="bubble-text">Blank page</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="canvas_state" value="5" />
+                <span class="bubble-text">A few pieces</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="canvas_state" value="9" />
+                <span class="bubble-text">Already telling stories</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-footer">
+          <button class="btn btn-primary" id="continue-intuition" disabled>
+            Continue
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 2: YOUR VISION ==================== -->
+    <section id="section-vision" class="screen quiz-section" data-section="vision">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-number">2 of 3</span>
+          <h2 class="section-title">Your Vision</h2>
+          <p class="section-subtitle text-secondary">Do you know what you want?</p>
+        </div>
+
+        <div class="questions-container" id="questions-vision">
+          <!-- Question 5: Inner Vision -->
+          <div class="question-card" data-question-id="inner_vision" data-section="vision">
+            <h3 class="question-label">When you picture it...</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="inner_vision" value="2" />
+                <span class="bubble-text">I feel it more than see it</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="inner_vision" value="5" />
+                <span class="bubble-text">I have a rough sense</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="inner_vision" value="9" />
+                <span class="bubble-text">I see it clearly</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 6: Reference Harmony -->
+          <div class="question-card" data-question-id="reference_harmony" data-section="vision">
+            <h3 class="question-label">The images you're drawn to...</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="reference_harmony" value="2" />
+                <span class="bubble-text">All over the place</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="reference_harmony" value="5" />
+                <span class="bubble-text">Starting to find a thread</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="reference_harmony" value="9" />
+                <span class="bubble-text">Share a common thread</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 7: Density Appetite -->
+          <div class="question-card" data-question-id="density_appetite" data-section="vision">
+            <h3 class="question-label">Your visual taste...</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="density_appetite" value="2" />
+                <span class="bubble-text">Breathing room. Less is more.</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="density_appetite" value="5" />
+                <span class="bubble-text">Somewhere in the middle</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="density_appetite" value="9" />
+                <span class="bubble-text">Every inch alive</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 8: Certainty -->
+          <div class="question-card" data-question-id="certainty" data-section="vision">
+            <h3 class="question-label">How sure are you?</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="certainty" value="2" />
+                <span class="bubble-text">Still exploring</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="certainty" value="5" />
+                <span class="bubble-text">Getting clearer</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="certainty" value="9" />
+                <span class="bubble-text">Completely decided</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-footer">
+          <button class="btn btn-primary" id="continue-vision" disabled>
+            Continue
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 3: YOUR STYLE ==================== -->
+    <section id="section-style" class="screen quiz-section" data-section="style">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-number">3 of 3</span>
+          <h2 class="section-title">Your Style</h2>
+          <p class="section-subtitle text-secondary">Do you know how you work?</p>
+        </div>
+
+        <div class="questions-container" id="questions-style">
+          <!-- Question 9: Creative Handoff -->
+          <div class="question-card" data-question-id="creative_handoff" data-section="style">
+            <h3 class="question-label">When it comes to the design...</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="creative_handoff" value="2" />
+                <span class="bubble-text">I want to guide it</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="creative_handoff" value="5" />
+                <span class="bubble-text">Collaborate with me</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="creative_handoff" value="9" />
+                <span class="bubble-text">Surprise me</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 10: Iteration Comfort -->
+          <div class="question-card" data-question-id="iteration_comfort" data-section="style">
+            <h3 class="question-label">Your comfort with back and forth...</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="iteration_comfort" value="2" />
+                <span class="bubble-text">I'd rather get it right the first time</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="iteration_comfort" value="5" />
+                <span class="bubble-text">A few rounds is fine</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="iteration_comfort" value="9" />
+                <span class="bubble-text">Refining is part of the process</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 11: Openness to Influence -->
+          <div class="question-card" data-question-id="openness_to_influence" data-section="style">
+            <h3 class="question-label">If the artist suggests a different direction...</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="openness_to_influence" value="2" />
+                <span class="bubble-text">I'd rather stay the course</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="openness_to_influence" value="5" />
+                <span class="bubble-text">I'll hear them out</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="openness_to_influence" value="9" />
+                <span class="bubble-text">I'm here for their perspective</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 12: Articulation -->
+          <div class="question-card" data-question-id="articulation" data-section="style">
+            <h3 class="question-label">Putting your vision into words...</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="articulation" value="2" />
+                <span class="bubble-text">It's hard to explain</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="articulation" value="5" />
+                <span class="bubble-text">I can get the gist across</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="articulation" value="9" />
+                <span class="bubble-text">I can paint the picture</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-footer">
+          <button class="btn btn-primary" id="continue-style" disabled>
+            See Your Results
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ARCHETYPE REVEAL ==================== -->
+    <section id="reveal" class="screen">
+      <div class="container">
+        <div class="reveal-animation">
+          <span class="reveal-sparkle">&#10024;</span>
+          <h1 class="reveal-archetype" id="archetype-name">
+            THE MYTHMAKER
+          </h1>
+          <span class="reveal-sparkle">&#10024;</span>
+        </div>
+
+        <p class="reveal-oneliner" id="archetype-oneliner">
+          "I'm writing my own legend."
+        </p>
+
+        <div class="reveal-copy" id="archetype-copy">
+          <!-- Full reveal copy inserted here -->
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="ink-profile">
+          <h3>Your Ink Profile</h3>
+          <p class="ink-profile-name" id="profile-name">Living Story</p>
+          <p class="ink-profile-tagline text-secondary" id="profile-tagline">
+            "The meaning moves with you."
+          </p>
+          <p class="ink-profile-copy text-secondary" id="profile-copy">
+            <!-- Client copy inserted here -->
+          </p>
+          <div class="style-matches" id="style-matches">
+            <!-- Style tags inserted here -->
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-large" id="continue-to-details">
+          Continue to Details
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== DETAILS FORM ==================== -->
+    <section id="details" class="screen">
+      <div class="container">
+        <h2>Almost done</h2>
+        <p class="text-secondary">A few details to help your artist prepare.</p>
+
+        <div id="form-errors" class="form-errors" role="alert" aria-live="polite"></div>
+
+        <form id="details-form" novalidate>
+
+          <!-- Placement -->
+          <div class="form-group">
+            <label for="placement">Placement <span class="required">*</span></label>
+            <select id="placement" name="placement" required>
+              <option value="">Select placement</option>
+              <optgroup label="Arm">
+                <option value="inner_forearm">Inner forearm</option>
+                <option value="outer_forearm">Outer forearm</option>
+                <option value="upper_arm_inner">Upper arm (inner)</option>
+                <option value="upper_arm_outer">Upper arm (outer)</option>
+                <option value="full_sleeve">Full sleeve</option>
+                <option value="half_sleeve">Half sleeve</option>
+              </optgroup>
+              <optgroup label="Leg">
+                <option value="thigh_front">Thigh (front)</option>
+                <option value="thigh_back">Thigh (back/side)</option>
+                <option value="calf">Calf</option>
+                <option value="shin">Shin</option>
+                <option value="ankle">Ankle</option>
+                <option value="full_leg">Full leg</option>
+              </optgroup>
+              <optgroup label="Torso">
+                <option value="chest">Chest</option>
+                <option value="ribs">Ribs</option>
+                <option value="stomach">Stomach</option>
+                <option value="back_upper">Back (upper)</option>
+                <option value="back_full">Back (full)</option>
+                <option value="side_flank">Side/flank</option>
+              </optgroup>
+              <optgroup label="Other">
+                <option value="neck">Neck</option>
+                <option value="hand">Hand</option>
+                <option value="finger">Finger</option>
+                <option value="foot">Foot</option>
+                <option value="behind_ear">Behind ear</option>
+                <option value="face">Face</option>
+              </optgroup>
+              <optgroup label="Undecided">
+                <option value="not_sure">Not sure yet</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <!-- Size -->
+          <div class="form-group">
+            <label>Size <span class="required">*</span></label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="size" value="tiny" required />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">Tiny</span>
+                  <span class="radio-desc text-tiny text-muted">Coin sized (&lt; 2 in)</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="size" value="small" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">Small</span>
+                  <span class="radio-desc text-tiny text-muted">Palm sized (2 to 4 in)</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="size" value="medium" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">Medium</span>
+                  <span class="radio-desc text-tiny text-muted">Hand sized (4 to 6 in)</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="size" value="large" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">Large</span>
+                  <span class="radio-desc text-tiny text-muted">Full area (6 to 10 in)</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="size" value="xlarge" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">Extra Large</span>
+                  <span class="radio-desc text-tiny text-muted">Multi session (10+ in)</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="size" value="unsure" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">Not sure yet</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Budget -->
+          <div class="form-group">
+            <label>Budget <span class="required">*</span></label>
+            <div class="radio-group" id="budget-options">
+              <label class="radio-option">
+                <input type="radio" name="budget" value="under_200" required />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">Under $200</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="budget" value="200_500" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">$200 to $500</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="budget" value="500_1000" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">$500 to $1,000</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="budget" value="1000_2500" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">$1,000 to $2,500</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="budget" value="2500_plus" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">$2,500+</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="budget" value="discuss" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">Let's discuss</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="form-group">
+            <label>Timeline <span class="required">*</span></label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="timeline" value="asap" required />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">Ready now</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="timeline" value="1_month" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">Within 1 month</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="timeline" value="1_3_months" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">1 to 3 months</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="timeline" value="3_6_months" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">3 to 6 months</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="timeline" value="flexible" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">Flexible / no rush</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="timeline" value="specific" />
+                <span class="radio-custom"></span>
+                <span class="radio-content">
+                  <span class="radio-label">Specific date (event)</span>
+                </span>
+              </label>
+            </div>
+            <div class="conditional-field" id="specific-date-field" style="display: none;">
+              <input type="text" id="specific_date" name="specific_date" placeholder="What's the date/event?" />
+            </div>
+          </div>
+
+          <!-- References -->
+          <div class="form-group">
+            <label for="pinterest">References (optional)</label>
+            <input
+              type="url"
+              id="pinterest"
+              name="pinterest"
+              placeholder="Paste your Pinterest board URL"
+            />
+            <div class="file-upload" id="reference-upload">
+              <input type="file" id="references" name="references" accept="image/jpeg,image/png,image/webp" multiple />
+              <label for="references" class="file-upload-label">
+                <span class="file-upload-icon">+</span>
+                <span>Upload images (max 5)</span>
+              </label>
+              <div class="file-list" id="file-list"></div>
+            </div>
+          </div>
+
+          <!-- Note -->
+          <div class="form-group">
+            <label for="note">Anything else? (optional)</label>
+            <textarea
+              id="note"
+              name="note"
+              placeholder="Anything else you want the artist to know?"
+              maxlength="500"
+              rows="4"
+            ></textarea>
+            <span class="char-count text-tiny text-muted"><span id="note-count">0</span>/500</span>
+          </div>
+
+          <div class="form-divider"></div>
+
+          <!-- Contact Info -->
+          <h3 class="form-section-title">Contact Info</h3>
+
+          <div class="form-group">
+            <label for="name">Name <span class="required">*</span></label>
+            <input type="text" id="name" name="name" required autocomplete="name" />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email <span class="required">*</span></label>
+            <input type="email" id="email" name="email" required autocomplete="email" />
+          </div>
+
+          <div class="form-group" id="instagram-group">
+            <label for="instagram">Instagram (optional)</label>
+            <input type="text" id="instagram" name="instagram" placeholder="@" />
+          </div>
+
+          <div class="form-group" id="phone-group" style="display: none;">
+            <label for="phone">Phone (optional)</label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel" />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-large" id="submit-btn">
+            Submit
+          </button>
+
+        </form>
+      </div>
+    </section>
+
+    <!-- ==================== CONFIRMATION ==================== -->
+    <section id="confirmation" class="screen">
+      <div class="container">
+        <div class="confirmation-icon">&#10003;</div>
+        <h2>You're all set</h2>
+        <p class="text-secondary" id="confirmation-message">
+          The artist will be in touch soon.
+        </p>
+
+        <a href="#" class="btn btn-primary btn-large" id="booking-cta" target="_blank" rel="noopener noreferrer">
+          Book Now
+        </a>
+
+        <button class="btn btn-secondary" id="retake-btn">
+          Retake Quiz
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loading-overlay" style="display: none;">
+    <div class="loading-spinner"></div>
+    <p>Submitting...</p>
+  </div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

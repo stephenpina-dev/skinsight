@@ -1,0 +1,21 @@
+{
+  "artistId": "default",
+  "displayName": "Skin Sight",
+  "logoUrl": null,
+  "colors": {
+    "primary": "#C9885C",
+    "secondary": "#8FA878"
+  },
+  "bookingUrl": "https://example.com/book",
+  "instagramHandle": "@skinsight",
+  "submission": {
+    "method": "formspree",
+    "formId": "YOUR_FORMSPREE_ID"
+  },
+  "options": {
+    "budgetRanges": null,
+    "showInstagram": true,
+    "showPhone": false,
+    "requireReferences": false
+  }
+}

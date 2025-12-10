@@ -1,0 +1,1412 @@
+# SKIN SIGHT v1.0 — Technical Specification
+
+## FOR CLAUDE CODE: READ THIS ENTIRE DOCUMENT BEFORE BUILDING
+
+This specification describes exactly how to build the SKIN SIGHT web application. Do not deviate from these requirements. Every feature, design decision, and data structure is documented here.
+
+Reference SKINSIGHT-Data.txt for all content (sliders, archetypes, ink profiles, flags, etc.)
+
+---
+
+# 1. PROJECT OVERVIEW
+
+## What It Is
+
+SKIN SIGHT is a client intake quiz for tattoo artists. Clients answer 12 slider questions across 3 sections, then receive an archetype reveal they can screenshot and share. Artists receive the full client profile via email or webhook.
+
+## Core Principles
+
+1. **Frontend only** — No backend, no database, no auth
+2. **Mobile first** — Primary usage is phones
+3. **White-label ready** — Different artists get different branding via config files
+4. **Privacy first** — No data stored on our servers, submissions go direct to artist
+
+## Value Proposition
+
+Client gets: Fun, shareable archetype reveal
+Artist gets: Deep insight into client before consultation
+
+---
+
+# 2. FILE STRUCTURE
+
+```
+skinsight/
+├── index.html
+├── styles.css
+├── data.js
+├── app.js
+├── configs/
+│   ├── default.json
+│   └── [artistname].json
+└── assets/
+    └── fonts/
+```
+
+## File Responsibilities
+
+| File | Purpose |
+|------|---------|
+| index.html | Structure only. Semantic HTML5. |
+| styles.css | All styling. CSS custom properties for theming. |
+| data.js | All content from SKINSIGHT-Data.txt |
+| app.js | All logic: quiz flow, calculations, form handling |
+| configs/*.json | Per-artist branding and settings |
+
+---
+
+# 3. ARCHITECTURE
+
+## White-Label Routing
+
+URL pattern: `skinsight.co/artistname`
+
+How it works:
+1. App loads
+2. Extract artist slug from URL path
+3. Fetch `configs/[artistname].json`
+4. If not found, fall back to `configs/default.json`
+5. Apply branding from config
+6. Quiz proceeds with that artist's settings
+
+## Config File Schema
+
+```json
+{
+  "artistId": "lunatatoo",
+  "displayName": "Luna Tattoo",
+  "logoUrl": "https://example.com/logo.png",
+  "colors": {
+    "primary": "#C9885C",
+    "secondary": "#8FA878"
+  },
+  "bookingUrl": "https://calendly.com/lunatattoo",
+  "instagramHandle": "@lunatattoo",
+  "submission": {
+    "method": "email",
+    "email": "luna@example.com"
+  },
+  "options": {
+    "budgetRanges": ["Under $200", "$200 to $500", "$500 to $1,000", "$1,000+", "Let's discuss"],
+    "showInstagram": true,
+    "showPhone": false,
+    "requireReferences": false
+  }
+}
+```
+
+## Submission Methods
+
+### Option 1: Email (via EmailJS or Formspree)
+
+```javascript
+// Using Formspree
+fetch("https://formspree.io/f/{form_id}", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(submissionData)
+});
+```
+
+### Option 2: Webhook
+
+```javascript
+// Custom webhook URL from config
+fetch(config.submission.webhookUrl, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(submissionData)
+});
+```
+
+For MVP, use Formspree (free tier: 50 submissions/month per form).
+
+---
+
+# 4. USER FLOW
+
+## Client Journey
+
+```
+1. LANDING
+   └── Artist branding loaded
+   └── Welcome message
+   └── "Begin" button
+
+2. SECTION 1: YOUR INTUITION
+   └── 4 sliders, one at a time or all visible
+   └── Smooth transitions between sliders
+   └── "Continue" button appears when all complete
+
+3. SECTION 2: YOUR VISION
+   └── Same pattern
+   └── "Continue" button
+
+4. SECTION 3: YOUR STYLE
+   └── Same pattern
+   └── "See Your Results" button
+
+5. ARCHETYPE REVEAL
+   └── Animated reveal of archetype name
+   └── One-liner
+   └── Full reveal copy
+   └── Ink Profile section below
+   └── "Continue to Details" button
+
+6. DETAILS FORM
+   └── Placement (dropdown)
+   └── Size (radio)
+   └── Budget (radio)
+   └── Timeline (radio)
+   └── References (optional upload/link)
+   └── Note (optional textarea)
+   └── Contact info
+   └── "Submit" button
+
+7. CONFIRMATION
+   └── Thank you message
+   └── "Book with [Artist Name]" CTA button
+   └── Option to retake quiz
+```
+
+## Progress Saving
+
+Use localStorage:
+
+```javascript
+const STORAGE_KEY = "skinsight_progress";
+
+// Save on every slider change
+function saveProgress() {
+  const progress = {
+    artistId: currentConfig.artistId,
+    sliders: sliderValues,
+    currentSection: currentSection,
+    timestamp: Date.now()
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+}
+
+// Load on page init
+function loadProgress() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    const progress = JSON.parse(saved);
+    // Check if same artist and less than 24 hours old
+    if (progress.artistId === currentConfig.artistId && 
+        Date.now() - progress.timestamp < 86400000) {
+      return progress;
+    }
+  }
+  return null;
+}
+
+// Clear on submission
+function clearProgress() {
+  localStorage.removeItem(STORAGE_KEY);
+}
+```
+
+---
+
+# 5. DESIGN SYSTEM
+
+## Colors (CSS Custom Properties)
+
+```css
+:root {
+  /* Backgrounds */
+  --bg-primary: #FAF7F2;
+  --bg-surface: #FFFFFF;
+  --bg-surface-hover: #F5F1EB;
+  
+  /* Primary palette */
+  --color-primary: #C9885C;
+  --color-primary-hover: #B5764D;
+  --color-secondary: #8FA878;
+  --color-secondary-hover: #7D9568;
+  
+  /* Text */
+  --text-primary: #2D2A26;
+  --text-secondary: #7D756A;
+  --text-muted: #A9A096;
+  
+  /* Accents */
+  --color-highlight: #F2E0D4;
+  --color-success: #7CAF7A;
+  --color-warning: #D4A855;
+  --color-error: #C97065;
+  
+  /* Borders */
+  --border-color: #E8E4DE;
+  --border-focus: #C9885C;
+  
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-xxl: 3rem;
+  
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(45, 42, 38, 0.05);
+  --shadow-md: 0 4px 6px rgba(45, 42, 38, 0.07);
+  --shadow-lg: 0 10px 15px rgba(45, 42, 38, 0.1);
+  
+  /* Typography */
+  --font-heading: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+}
+```
+
+## Typography
+
+```css
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@400;500;600;700&display=swap');
+
+/* Headings */
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+h1 { font-size: 2.5rem; font-weight: 700; }
+h2 { font-size: 1.75rem; font-weight: 600; }
+h3 { font-size: 1.25rem; font-weight: 600; }
+
+/* Body */
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+/* Small text */
+.text-small { font-size: 0.875rem; }
+.text-tiny { font-size: 0.75rem; }
+.text-muted { color: var(--text-muted); }
+.text-secondary { color: var(--text-secondary); }
+```
+
+## White-Label Color Override
+
+When config loads, inject custom properties:
+
+```javascript
+function applyBranding(config) {
+  const root = document.documentElement;
+  if (config.colors.primary) {
+    root.style.setProperty('--color-primary', config.colors.primary);
+    root.style.setProperty('--border-focus', config.colors.primary);
+  }
+  if (config.colors.secondary) {
+    root.style.setProperty('--color-secondary', config.colors.secondary);
+  }
+}
+```
+
+---
+
+# 6. COMPONENT SPECIFICATIONS
+
+## 6.1 Landing Screen
+
+```html
+<section id="landing" class="screen">
+  <div class="container">
+    <div class="logo-area">
+      <!-- If logoUrl in config, show image. Otherwise show text. -->
+      <img src="{config.logoUrl}" alt="{config.displayName}" class="logo" />
+      <!-- OR -->
+      <h1 class="logo-text">{config.displayName}</h1>
+    </div>
+    
+    <div class="intro">
+      <h2>Discover your tattoo archetype</h2>
+      <p class="text-secondary">12 questions. 2 minutes. A clearer path to your next piece.</p>
+    </div>
+    
+    <button class="btn btn-primary btn-large" id="begin-btn">
+      Begin
+    </button>
+    
+    <p class="text-tiny text-muted powered-by">
+      Powered by Skin Sight
+    </p>
+  </div>
+</section>
+```
+
+## 6.2 Section Header
+
+```html
+<div class="section-header">
+  <span class="section-number">1 of 3</span>
+  <h2 class="section-title">Your Intuition</h2>
+  <p class="section-subtitle text-secondary">Do you know yourself?</p>
+</div>
+```
+
+## 6.3 Slider Component
+
+```html
+<div class="slider-card" data-slider-id="incubation">
+  <label class="slider-label">
+    How long has this idea been living with you?
+  </label>
+  
+  <div class="slider-container">
+    <span class="slider-min text-small text-muted">It just found me</span>
+    <input 
+      type="range" 
+      class="slider" 
+      min="1" 
+      max="10" 
+      value="5"
+      id="slider-incubation"
+    />
+    <span class="slider-max text-small text-muted">Years with me</span>
+  </div>
+  
+  <div class="slider-value-display">
+    <span class="slider-value">5</span>
+  </div>
+</div>
+```
+
+### Slider Styling
+
+```css
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: var(--bg-surface-hover);
+  border-radius: var(--radius-full);
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-fast);
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-lg);
+}
+
+.slider::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+}
+
+/* Firefox */
+.slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  border: none;
+  box-shadow: var(--shadow-md);
+}
+```
+
+## 6.4 Continue Button
+
+```html
+<div class="section-footer">
+  <button class="btn btn-primary" id="continue-btn" disabled>
+    Continue
+  </button>
+</div>
+```
+
+Button enables when all sliders in section have been interacted with:
+
+```javascript
+function checkSectionComplete(section) {
+  const sliders = document.querySelectorAll(`[data-section="${section}"] .slider`);
+  const allTouched = Array.from(sliders).every(s => s.dataset.touched === "true");
+  document.getElementById("continue-btn").disabled = !allTouched;
+}
+
+// Mark as touched on first interaction
+slider.addEventListener("input", () => {
+  slider.dataset.touched = "true";
+  checkSectionComplete(currentSection);
+});
+```
+
+## 6.5 Archetype Reveal
+
+```html
+<section id="reveal" class="screen">
+  <div class="container">
+    <div class="reveal-animation">
+      <span class="reveal-sparkle">✨</span>
+      <h1 class="reveal-archetype" id="archetype-name">
+        THE MYTHMAKER
+      </h1>
+      <span class="reveal-sparkle">✨</span>
+    </div>
+    
+    <p class="reveal-oneliner" id="archetype-oneliner">
+      "I'm writing my own legend."
+    </p>
+    
+    <div class="reveal-copy" id="archetype-copy">
+      <!-- Full reveal copy inserted here -->
+    </div>
+    
+    <div class="divider"></div>
+    
+    <div class="ink-profile">
+      <h3>Your Ink Profile</h3>
+      <p class="ink-profile-name" id="profile-name">Living Story</p>
+      <p class="ink-profile-tagline text-secondary" id="profile-tagline">
+        "The meaning moves with you."
+      </p>
+      <div class="style-matches" id="style-matches">
+        <!-- Style tags inserted here -->
+      </div>
+    </div>
+    
+    <button class="btn btn-primary" id="continue-to-details">
+      Continue to Details
+    </button>
+  </div>
+</section>
+```
+
+### Reveal Animation
+
+```css
+.reveal-animation {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: revealFade 800ms ease forwards;
+  animation-delay: 300ms;
+}
+
+@keyframes revealFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-archetype {
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin: var(--space-md) 0;
+}
+
+.reveal-sparkle {
+  font-size: 2rem;
+  display: inline-block;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.9); }
+}
+
+.reveal-oneliner {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xl);
+}
+
+.reveal-copy {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto var(--space-xl);
+  text-align: center;
+}
+```
+
+## 6.6 Details Form
+
+```html
+<section id="details" class="screen">
+  <div class="container">
+    <h2>Almost done</h2>
+    <p class="text-secondary">A few details to help your artist prepare.</p>
+    
+    <form id="details-form">
+      
+      <!-- Placement -->
+      <div class="form-group">
+        <label for="placement">Placement</label>
+        <select id="placement" name="placement" required>
+          <option value="">Select placement</option>
+          <optgroup label="Arm">
+            <option value="inner_forearm">Inner forearm</option>
+            <option value="outer_forearm">Outer forearm</option>
+            <!-- etc -->
+          </optgroup>
+          <!-- more optgroups -->
+        </select>
+      </div>
+      
+      <!-- Size -->
+      <div class="form-group">
+        <label>Size</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="size" value="tiny" required />
+            <span class="radio-label">Tiny</span>
+            <span class="radio-desc text-tiny text-muted">Coin sized</span>
+          </label>
+          <!-- more options -->
+        </div>
+      </div>
+      
+      <!-- Budget -->
+      <div class="form-group">
+        <label>Budget</label>
+        <div class="radio-group" id="budget-options">
+          <!-- Populated from config.options.budgetRanges -->
+        </div>
+      </div>
+      
+      <!-- Timeline -->
+      <div class="form-group">
+        <label>Timeline</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="timeline" value="asap" required />
+            <span class="radio-label">Ready now</span>
+          </label>
+          <!-- more options -->
+        </div>
+      </div>
+      
+      <!-- References -->
+      <div class="form-group">
+        <label>References (optional)</label>
+        <input 
+          type="url" 
+          id="pinterest" 
+          name="pinterest" 
+          placeholder="Paste Pinterest board URL"
+        />
+        <div class="file-upload" id="reference-upload">
+          <input type="file" id="references" accept="image/*" multiple max="5" />
+          <label for="references">Upload images (max 5)</label>
+        </div>
+      </div>
+      
+      <!-- Note -->
+      <div class="form-group">
+        <label for="note">Anything else? (optional)</label>
+        <textarea 
+          id="note" 
+          name="note" 
+          placeholder="Anything else you want the artist to know?"
+          maxlength="500"
+        ></textarea>
+      </div>
+      
+      <!-- Contact -->
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+      
+      <!-- Conditional based on config -->
+      <div class="form-group" id="instagram-group">
+        <label for="instagram">Instagram (optional)</label>
+        <input type="text" id="instagram" name="instagram" placeholder="@" />
+      </div>
+      
+      <button type="submit" class="btn btn-primary btn-large">
+        Submit
+      </button>
+      
+    </form>
+  </div>
+</section>
+```
+
+## 6.7 Confirmation Screen
+
+```html
+<section id="confirmation" class="screen">
+  <div class="container">
+    <div class="confirmation-icon">✓</div>
+    <h2>You're all set</h2>
+    <p class="text-secondary">
+      {config.displayName} will be in touch soon.
+    </p>
+    
+    <a href="{config.bookingUrl}" class="btn btn-primary btn-large" target="_blank">
+      Book with {config.displayName}
+    </a>
+    
+    <button class="btn btn-secondary" id="retake-btn">
+      Retake Quiz
+    </button>
+  </div>
+</section>
+```
+
+---
+
+# 7. CALCULATION LOGIC
+
+## 7.1 Get Slider Values
+
+```javascript
+function getSliderValues() {
+  const values = {};
+  document.querySelectorAll('.slider').forEach(slider => {
+    values[slider.dataset.sliderId] = parseInt(slider.value, 10);
+  });
+  return values;
+}
+```
+
+## 7.2 Detect Archetype
+
+```javascript
+function detectArchetype(values) {
+  // Priority order from SKINSIGHT-Data.txt
+  const checks = [
+    {
+      id: "debut",
+      check: () => values.canvas_state < 2
+    },
+    {
+      id: "compass",
+      check: () => values.reference_harmony < 4 && values.certainty < 5 && values.inner_vision < 5
+    },
+    {
+      id: "canvas",
+      check: () => values.certainty < 4 && values.articulation < 5 && values.creative_handoff > 5
+    },
+    {
+      id: "spark",
+      check: () => values.incubation < 3 && values.permanence_comfort > 5
+    },
+    {
+      id: "architect",
+      check: () => values.creative_handoff < 4 && values.articulation > 6 && values.inner_vision > 6
+    },
+    {
+      id: "muse",
+      check: () => values.creative_handoff > 7 && values.openness_to_influence > 7
+    },
+    {
+      id: "mythmaker",
+      check: () => values.inner_vision < 5 && values.certainty > 6 && values.articulation > 5
+    },
+    {
+      id: "visionary",
+      check: () => values.inner_vision > 7 && values.reference_harmony > 6 && values.certainty > 5
+    },
+    {
+      id: "deliberate",
+      check: () => values.incubation > 7 && values.reference_harmony > 7 && values.iteration_comfort > 6
+    },
+    {
+      id: "collector",
+      check: () => values.canvas_state > 7 && values.certainty > 7 && values.reference_harmony > 6
+    },
+    {
+      id: "rhythm",
+      check: () => values.canvas_state > 5 && values.creative_handoff > 5 && values.openness_to_influence > 6 && values.iteration_comfort > 5
+    },
+    {
+      id: "attuned",
+      check: () => true // Default fallback
+    }
+  ];
+  
+  for (const archetype of checks) {
+    if (archetype.check()) {
+      return archetypes.find(a => a.id === archetype.id);
+    }
+  }
+}
+```
+
+## 7.3 Detect Ink Profile
+
+```javascript
+function detectInkProfile(values, archetype) {
+  const checks = [
+    {
+      id: "still_unfolding",
+      check: () => values.certainty < 4 && values.reference_harmony < 5
+    },
+    {
+      id: "artists_hand",
+      check: () => values.creative_handoff > 7 && values.inner_vision < 5 && values.openness_to_influence > 6
+    },
+    {
+      id: "light_touch",
+      check: () => values.density_appetite < 4 && values.certainty > 5
+    },
+    {
+      id: "full_canvas",
+      check: () => values.density_appetite > 7 && values.reference_harmony > 5 && values.certainty > 5
+    },
+    {
+      id: "precision",
+      check: () => values.inner_vision > 7 && values.certainty > 6 && values.density_appetite >= 4 && values.density_appetite <= 7
+    },
+    {
+      id: "soft_edge",
+      check: () => values.inner_vision < 5 && values.creative_handoff > 5 && values.density_appetite >= 3 && values.density_appetite <= 6
+    },
+    {
+      id: "bold_classic",
+      check: () => values.density_appetite > 5 && values.reference_harmony > 6 && values.inner_vision > 5 && values.certainty > 6
+    },
+    {
+      id: "living_story",
+      check: () => archetype.id === "mythmaker" || (values.inner_vision >= 4 && values.inner_vision <= 7 && values.certainty > 5)
+    }
+  ];
+  
+  for (const profile of checks) {
+    if (profile.check()) {
+      return inkProfiles.find(p => p.id === profile.id);
+    }
+  }
+  
+  return inkProfiles.find(p => p.id === "living_story"); // Default
+}
+```
+
+## 7.4 Detect Modifiers
+
+```javascript
+function detectModifiers(values) {
+  const detected = [];
+  
+  if (values.certainty < 4) {
+    detected.push(modifiers.find(m => m.id === "low_certainty"));
+  }
+  if (values.reference_harmony < 4) {
+    detected.push(modifiers.find(m => m.id === "scattered_references"));
+  }
+  if (values.certainty > 8 && values.reference_harmony > 7) {
+    detected.push(modifiers.find(m => m.id === "locked_in"));
+  }
+  if (values.reference_harmony < 4 && values.density_appetite > 6) {
+    detected.push(modifiers.find(m => m.id === "eclectic_taste"));
+  }
+  if (values.inner_vision < 4) {
+    detected.push(modifiers.find(m => m.id === "feeling_over_image"));
+  }
+  if (values.inner_vision > 7 && values.articulation > 6) {
+    detected.push(modifiers.find(m => m.id === "image_over_feeling"));
+  }
+  // True middle: all vision sliders between 4 and 6
+  if (values.inner_vision >= 4 && values.inner_vision <= 6 &&
+      values.reference_harmony >= 4 && values.reference_harmony <= 6 &&
+      values.density_appetite >= 4 && values.density_appetite <= 6 &&
+      values.certainty >= 4 && values.certainty <= 6) {
+    detected.push(modifiers.find(m => m.id === "true_middle"));
+  }
+  if ((values.density_appetite > 7 || values.density_appetite < 3) && values.certainty < 5) {
+    detected.push(modifiers.find(m => m.id === "style_curious"));
+  }
+  
+  return detected;
+}
+```
+
+## 7.5 Detect Flags
+
+```javascript
+function detectFlags(values, archetype, details) {
+  const detected = [];
+  
+  // Intuition flags
+  if (values.incubation < 3 && values.permanence_comfort < 4) {
+    detected.push({ ...flags.intuition[0], severity: "high" }); // Impulse Alert
+  }
+  if (values.body_intuition > 7 && values.canvas_state < 2) {
+    detected.push({ ...flags.intuition[1], severity: "medium" }); // Pain Blind
+  }
+  if (values.canvas_state < 2 && values.certainty > 8) {
+    detected.push({ ...flags.intuition[2], severity: "low" }); // Fresh but Certain
+  }
+  if (values.incubation < 3 && values.density_appetite > 7) {
+    detected.push({ ...flags.intuition[3], severity: "medium" }); // Rushed Timeline
+  }
+  
+  // Vision flags
+  if (values.reference_harmony < 4 && values.certainty > 6) {
+    detected.push({ ...flags.vision[0], severity: "medium" }); // Pinterest Storm
+  }
+  if (values.inner_vision < 4 && values.certainty > 6) {
+    detected.push({ ...flags.vision[1], severity: "medium" }); // Fog Vision
+  }
+  if (values.density_appetite > 7 && details && details.size === "tiny") {
+    detected.push({ ...flags.vision[2], severity: "medium" }); // Size vs Detail
+  }
+  if (values.density_appetite >= 4 && values.density_appetite <= 6 && values.certainty < 4) {
+    detected.push({ ...flags.vision[3], severity: "low" }); // Complexity Unclear
+  }
+  
+  // Style flags
+  if (values.creative_handoff > 7 && values.openness_to_influence < 4) {
+    detected.push({ ...flags.style[0], severity: "high" }); // Control Paradox
+  }
+  if (values.articulation < 4 && values.creative_handoff < 4) {
+    detected.push({ ...flags.style[1], severity: "high" }); // Silent Director
+  }
+  if (values.iteration_comfort > 7 && values.articulation < 4) {
+    detected.push({ ...flags.style[2], severity: "medium" }); // Perfectionist Loop
+  }
+  if (values.iteration_comfort < 3 && values.articulation < 5) {
+    detected.push({ ...flags.style[3], severity: "medium" }); // One Shot Pressure
+  }
+  if (values.openness_to_influence > 7 && values.iteration_comfort < 3) {
+    detected.push({ ...flags.style[4], severity: "medium" }); // Yes Then No
+  }
+  
+  // Cross section flags
+  if (values.density_appetite > 7 && details && details.budget === "under_200") {
+    detected.push({ ...flags.cross[0], severity: "medium" }); // Champagne / Beer
+  }
+  if (values.inner_vision < 4 && values.creative_handoff < 4 && values.articulation < 4) {
+    detected.push({ ...flags.cross[1], severity: "high" }); // Ghost Handoff
+  }
+  if (values.canvas_state > 6 && values.certainty < 4 && values.reference_harmony < 4) {
+    detected.push({ ...flags.cross[2], severity: "low" }); // Experienced but Lost
+  }
+  if (archetype.id === "attuned" && values.incubation < 3) {
+    detected.push({ ...flags.cross[3], severity: "low" }); // Ready but Rushed
+  }
+  if (values.incubation < 3 && details && details.timeline === "asap") {
+    detected.push({ ...flags.cross[4], severity: "medium" }); // Timeline Crunch
+  }
+  
+  return detected;
+}
+```
+
+## 7.6 Detect Positive Flags
+
+```javascript
+function detectPositiveFlags(values, archetype, flagCount) {
+  const detected = [];
+  
+  // Calculate section averages
+  const intuitionAvg = (values.incubation + values.permanence_comfort + values.body_intuition + values.canvas_state) / 4;
+  const visionAvg = (values.inner_vision + values.reference_harmony + values.density_appetite + values.certainty) / 4;
+  const styleAvg = (values.creative_handoff + values.iteration_comfort + values.openness_to_influence + values.articulation) / 4;
+  
+  if (intuitionAvg >= 7 && visionAvg >= 7 && styleAvg >= 7 && flagCount === 0) {
+    detected.push(positiveFlags[0]); // Dream Client
+  }
+  if (values.canvas_state > 5 && archetype.id === "rhythm" && flagCount === 0) {
+    detected.push(positiveFlags[1]); // Smooth Repeat
+  }
+  if (archetype.id === "muse" && values.openness_to_influence > 7 && values.creative_handoff > 7) {
+    detected.push(positiveFlags[2]); // Trust Given
+  }
+  
+  return detected;
+}
+```
+
+## 7.7 Calculate Signal Clarity
+
+```javascript
+function calculateSignalClarity(flagCount, flags) {
+  const hasGhostHandoff = flags.some(f => f.id === "ghost_handoff");
+  const hasSilentDirector = flags.some(f => f.id === "silent_director");
+  
+  if (flagCount >= 5 || (hasGhostHandoff && hasSilentDirector)) {
+    return signalClarity.levels[3]; // Chaotic
+  }
+  if (flagCount >= 3) {
+    return signalClarity.levels[2]; // Mixed
+  }
+  if (flagCount >= 1) {
+    return signalClarity.levels[1]; // Some Noise
+  }
+  return signalClarity.levels[0]; // Clear
+}
+```
+
+---
+
+# 8. SUBMISSION DATA
+
+## Payload Structure
+
+```javascript
+const submissionData = {
+  // Meta
+  timestamp: new Date().toISOString(),
+  artistId: config.artistId,
+  
+  // Results
+  archetype: {
+    id: archetype.id,
+    name: archetype.name,
+    oneLiner: archetype.oneLiner
+  },
+  inkProfile: {
+    id: inkProfile.id,
+    name: inkProfile.name,
+    tagline: inkProfile.tagline,
+    styleMatches: inkProfile.styleMatches
+  },
+  
+  // Signal
+  signalClarity: {
+    level: signal.label,
+    icon: signal.icon,
+    display: signal.display
+  },
+  
+  // Flags
+  flags: detectedFlags.map(f => ({
+    label: f.label,
+    severity: f.severity,
+    artistNote: f.artistNote
+  })),
+  positiveFlags: detectedPositiveFlags.map(f => ({
+    label: f.label,
+    icon: f.icon,
+    artistNote: f.artistNote
+  })),
+  
+  // Modifiers
+  modifiers: detectedModifiers.map(m => ({
+    icon: m.icon,
+    label: m.label,
+    artistNote: m.artistNote
+  })),
+  
+  // Raw scores (for debugging/future use)
+  sliderValues: values,
+  
+  // Artist notes (compiled)
+  artistSummary: archetype.artistNote.summary,
+  artistHowToWork: archetype.artistNote.howToWork,
+  artistWatchFor: archetype.artistNote.watchFor,
+  inkProfileArtistCopy: inkProfile.artistCopy,
+  
+  // Details
+  details: {
+    placement: formData.placement,
+    size: formData.size,
+    budget: formData.budget,
+    timeline: formData.timeline,
+    pinterestUrl: formData.pinterest || null,
+    note: formData.note || null
+  },
+  
+  // Contact
+  contact: {
+    name: formData.name,
+    email: formData.email,
+    instagram: formData.instagram || null,
+    phone: formData.phone || null
+  }
+};
+```
+
+## Email Template (Plain Text for Formspree)
+
+```javascript
+function formatEmailBody(data) {
+  return `
+NEW SKIN SIGHT SUBMISSION
+========================
+
+CLIENT: ${data.contact.name}
+EMAIL: ${data.contact.email}
+${data.contact.instagram ? `INSTAGRAM: ${data.contact.instagram}` : ''}
+
+ARCHETYPE: ${data.archetype.name}
+"${data.archetype.oneLiner}"
+
+INK PROFILE: ${data.inkProfile.name}
+"${data.inkProfile.tagline}"
+Style matches: ${data.inkProfile.styleMatches.join(', ')}
+
+SIGNAL: ${data.signalClarity.icon} ${data.signalClarity.level}
+${data.signalClarity.display}
+
+${data.flags.length > 0 ? `
+FLAGS:
+${data.flags.map(f => `⚠️ ${f.label} (${f.severity})\n   ${f.artistNote}`).join('\n\n')}
+` : ''}
+
+${data.positiveFlags.length > 0 ? `
+GREEN LIGHTS:
+${data.positiveFlags.map(f => `${f.icon} ${f.label}\n   ${f.artistNote}`).join('\n\n')}
+` : ''}
+
+${data.modifiers.length > 0 ? `
+MODIFIERS:
+${data.modifiers.map(m => `${m.icon} ${m.label}: ${m.artistNote}`).join('\n')}
+` : ''}
+
+ARTIST NOTES:
+Summary: ${data.artistSummary}
+How to work: ${data.artistHowToWork}
+Watch for: ${data.artistWatchFor}
+
+DETAILS:
+Placement: ${data.details.placement}
+Size: ${data.details.size}
+Budget: ${data.details.budget}
+Timeline: ${data.details.timeline}
+${data.details.pinterestUrl ? `Pinterest: ${data.details.pinterestUrl}` : ''}
+${data.details.note ? `Note: ${data.details.note}` : ''}
+
+---
+Submitted via Skin Sight
+${data.timestamp}
+  `.trim();
+}
+```
+
+---
+
+# 9. MOBILE RESPONSIVE
+
+## Breakpoints
+
+```css
+/* Mobile first - base styles are mobile */
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .container {
+    max-width: 600px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 700px;
+  }
+}
+```
+
+## Touch Considerations
+
+```css
+/* Larger touch targets */
+.slider::-webkit-slider-thumb {
+  width: 32px;
+  height: 32px;
+}
+
+.btn {
+  min-height: 48px;
+  padding: var(--space-md) var(--space-xl);
+}
+
+.radio-option {
+  min-height: 48px;
+  padding: var(--space-md);
+}
+
+/* Prevent zoom on input focus (iOS) */
+input, select, textarea {
+  font-size: 16px;
+}
+```
+
+---
+
+# 10. ACCESSIBILITY
+
+## Requirements
+
+```html
+<!-- Proper labels -->
+<label for="slider-incubation">How long has this idea been living with you?</label>
+<input type="range" id="slider-incubation" aria-describedby="incubation-hint" />
+<span id="incubation-hint" class="sr-only">1 means it just found you, 10 means years</span>
+
+<!-- Screen reader only text -->
+<span class="sr-only">Current value: 5 out of 10</span>
+
+<!-- Focus states -->
+.slider:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Skip link */
+<a href="#main" class="skip-link">Skip to main content</a>
+```
+
+```css
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-primary);
+  color: white;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+```
+
+---
+
+# 11. ANIMATIONS
+
+## Section Transitions
+
+```css
+.screen {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--transition-slow), transform var(--transition-slow);
+}
+
+.screen.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+```
+
+## Slider Interaction
+
+```css
+.slider-card {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.slider-card:focus-within {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+```
+
+## Value Update
+
+```javascript
+function animateValue(element, newValue) {
+  element.classList.add('value-changed');
+  element.textContent = newValue;
+  setTimeout(() => element.classList.remove('value-changed'), 200);
+}
+```
+
+```css
+.value-changed {
+  animation: pulse 200ms ease;
+}
+
+@keyframes pulse {
+  50% { transform: scale(1.2); }
+}
+```
+
+---
+
+# 12. ERROR HANDLING
+
+## Form Validation
+
+```javascript
+function validateForm() {
+  const errors = [];
+  
+  if (!formData.placement) errors.push("Please select a placement");
+  if (!formData.size) errors.push("Please select a size");
+  if (!formData.budget) errors.push("Please select a budget");
+  if (!formData.timeline) errors.push("Please select a timeline");
+  if (!formData.name) errors.push("Please enter your name");
+  if (!formData.email || !isValidEmail(formData.email)) errors.push("Please enter a valid email");
+  
+  return errors;
+}
+
+function showErrors(errors) {
+  const errorContainer = document.getElementById('form-errors');
+  errorContainer.innerHTML = errors.map(e => `<p class="error">${e}</p>`).join('');
+  errorContainer.scrollIntoView({ behavior: 'smooth' });
+}
+```
+
+## Submission Error
+
+```javascript
+async function submitForm(data) {
+  try {
+    const response = await fetch(config.submission.endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    
+    if (!response.ok) throw new Error('Submission failed');
+    
+    showConfirmation();
+  } catch (error) {
+    showError('Something went wrong. Please try again or contact the artist directly.');
+  }
+}
+```
+
+---
+
+# 13. TESTING CHECKLIST
+
+Before considering the build complete:
+
+## Functionality
+- [ ] Config loads from URL path
+- [ ] Fallback to default config works
+- [ ] All 12 sliders work and save values
+- [ ] Progress saves to localStorage
+- [ ] Progress loads on return visit
+- [ ] Progress clears after submission
+- [ ] Section gating works (Continue button disabled until all touched)
+- [ ] Smooth scroll between sections works
+- [ ] Archetype detection matches spec
+- [ ] Ink Profile detection matches spec
+- [ ] Modifiers detect correctly
+- [ ] Flags detect correctly
+- [ ] Positive flags detect correctly
+- [ ] Signal clarity calculates correctly
+- [ ] All form fields work
+- [ ] Form validation works
+- [ ] Submission sends correctly
+- [ ] Confirmation screen shows
+- [ ] Booking CTA links correctly
+- [ ] Retake quiz works
+
+## Design
+- [ ] Colors match design system
+- [ ] Typography matches spec
+- [ ] Spacing is consistent
+- [ ] White-label colors apply correctly
+- [ ] Logo loads and displays correctly
+- [ ] Animations are smooth
+- [ ] Reveal animation works
+
+## Responsive
+- [ ] Works on iPhone SE (375px)
+- [ ] Works on iPhone 14 (390px)
+- [ ] Works on Android (360px)
+- [ ] Works on tablet (768px)
+- [ ] Works on desktop (1024px+)
+- [ ] Touch targets are 48px minimum
+- [ ] No horizontal scroll
+- [ ] No zoom on input focus
+
+## Accessibility
+- [ ] All inputs have labels
+- [ ] Focus states are visible
+- [ ] Screen reader can navigate
+- [ ] Skip link works
+- [ ] Color contrast passes WCAG AA
+
+## Edge Cases
+- [ ] Invalid artist slug falls back to default
+- [ ] Empty config values don't break layout
+- [ ] Very long text doesn't overflow
+- [ ] Special characters in input don't break
+- [ ] Submission works with optional fields empty
+
+---
+
+# 14. DEPLOYMENT
+
+## Static Hosting Options
+
+1. **Netlify** (recommended)
+   - Connect GitHub repo
+   - Auto deploys on push
+   - Free tier works fine
+   - Custom domain support
+
+2. **Vercel**
+   - Same benefits as Netlify
+   - Slightly faster builds
+
+3. **GitHub Pages**
+   - Free
+   - Manual config file management
+
+## Domain Setup
+
+Primary: `skinsight.co`
+Routing: `skinsight.co/[artistname]` loads that config
+
+## Config Management
+
+For MVP, configs are static JSON files in `/configs/` directory.
+
+To add new artist:
+1. Create `configs/artistname.json`
+2. Fill in their branding/settings
+3. Deploy
+4. They access at `skinsight.co/artistname`
+
+---
+
+END OF SPECIFICATION
