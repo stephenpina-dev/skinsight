@@ -1020,40 +1020,21 @@ ${data.timestamp}`;
   }
 
   async function submitData(data) {
-    const submission = currentConfig.submission || {};
+    const FORMSPREE_URL = 'https://formspree.io/f/xnnegwdq';
 
-    if (submission.webhookUrl) {
-      // Webhook submission
-      const response = await fetch(submission.webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
+    const response = await fetch(FORMSPREE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        _subject: `New Skin Sight Submission: ${data.archetype.name} / ${data.inkProfile.name}`,
+        name: data.contact.name,
+        email: data.contact.email,
+        message: data.emailBody
+      })
+    });
 
-      if (!response.ok) {
-        throw new Error('Webhook submission failed');
-      }
-    } else if (submission.formId) {
-      // Formspree submission
-      const response = await fetch(`https://formspree.io/f/${submission.formId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          _subject: `New Skin Sight Submission: ${data.archetype.name}`,
-          name: data.contact.name,
-          email: data.contact.email,
-          message: data.emailBody,
-          _data: JSON.stringify(data)
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Formspree submission failed');
-      }
-    } else {
-      // Fallback: just log to console (for testing)
-      console.log('Submission data:', data);
-      console.log('Email body:\n', data.emailBody);
+    if (!response.ok) {
+      throw new Error('Form submission failed');
     }
   }
 
