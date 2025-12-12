@@ -39,8 +39,45 @@
     initQuestions();
     initNavigation();
     initForm();
+    initPrivacyModal();
     loadProgress();
     updateProgressBar();
+  }
+
+  // ============================================================
+  // PRIVACY MODAL
+  // ============================================================
+
+  function initPrivacyModal() {
+    const privacyLink = document.getElementById('privacy-link');
+    const privacyModal = document.getElementById('privacy-modal');
+    const privacyClose = document.getElementById('privacy-close');
+
+    if (privacyLink && privacyModal) {
+      privacyLink.addEventListener('click', () => {
+        privacyModal.classList.add('active');
+        privacyModal.setAttribute('aria-hidden', 'false');
+      });
+
+      privacyClose.addEventListener('click', () => {
+        privacyModal.classList.remove('active');
+        privacyModal.setAttribute('aria-hidden', 'true');
+      });
+
+      privacyModal.addEventListener('click', (e) => {
+        if (e.target === privacyModal) {
+          privacyModal.classList.remove('active');
+          privacyModal.setAttribute('aria-hidden', 'true');
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && privacyModal.classList.contains('active')) {
+          privacyModal.classList.remove('active');
+          privacyModal.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }
   }
 
   // ============================================================
@@ -384,251 +421,70 @@
   }
 
   function detectArchetype(values) {
-    // Priority order check
-    // Note: With bubble values (2, 5, 9), thresholds are adjusted accordingly
-    const checks = [
-      {
-        id: 'debut',
-        check: () => values.canvas_state <= 2
-      },
-      {
-        id: 'compass',
-        check: () => values.reference_harmony <= 2 && values.certainty <= 5 && values.inner_vision <= 5
-      },
-      {
-        id: 'canvas',
-        check: () => values.certainty <= 2 && values.articulation <= 5 && values.creative_handoff >= 5
-      },
-      {
-        id: 'spark',
-        check: () => values.incubation <= 2 && values.permanence_comfort >= 5
-      },
-      {
-        id: 'architect',
-        check: () => values.creative_handoff <= 2 && values.articulation >= 9 && values.inner_vision >= 9
-      },
-      {
-        id: 'muse',
-        check: () => values.creative_handoff >= 9 && values.openness_to_influence >= 9
-      },
-      {
-        id: 'mythmaker',
-        check: () => values.inner_vision <= 5 && values.certainty >= 9 && values.articulation >= 5
-      },
-      {
-        id: 'visionary',
-        check: () => values.inner_vision >= 9 && values.reference_harmony >= 9 && values.certainty >= 5
-      },
-      {
-        id: 'deliberate',
-        check: () => values.incubation >= 9 && values.reference_harmony >= 9 && values.iteration_comfort >= 9
-      },
-      {
-        id: 'collector',
-        check: () => values.canvas_state >= 9 && values.certainty >= 9 && values.reference_harmony >= 9
-      },
-      {
-        id: 'rhythm',
-        check: () => values.canvas_state >= 5 && values.creative_handoff >= 5 && values.openness_to_influence >= 9 && values.iteration_comfort >= 5
-      },
-      {
-        id: 'attuned',
-        check: () => true // Default fallback
-      }
-    ];
+    const scale = SKIN_SIGHT_DATA.scale;
+    const sorted = [...SKIN_SIGHT_DATA.archetypes].sort((a, b) => a.priority - b.priority);
 
-    for (const archetypeCheck of checks) {
-      if (archetypeCheck.check()) {
-        return archetypes.find(a => a.id === archetypeCheck.id);
+    for (const arch of sorted) {
+      if (arch.detect(values, scale)) {
+        return arch;
       }
     }
 
-    return archetypes.find(a => a.id === 'attuned');
+    // Fallback to last (attuned)
+    return sorted[sorted.length - 1];
   }
 
   function detectInkProfile(values, archetype) {
-    const checks = [
-      {
-        id: 'still_unfolding',
-        check: () => values.certainty <= 2 && values.reference_harmony <= 5
-      },
-      {
-        id: 'artists_hand',
-        check: () => values.creative_handoff >= 9 && values.inner_vision <= 5 && values.openness_to_influence >= 9
-      },
-      {
-        id: 'light_touch',
-        check: () => values.density_appetite <= 2 && values.certainty >= 5
-      },
-      {
-        id: 'full_canvas',
-        check: () => values.density_appetite >= 9 && values.reference_harmony >= 5 && values.certainty >= 5
-      },
-      {
-        id: 'precision',
-        check: () => values.inner_vision >= 9 && values.certainty >= 9 && values.density_appetite === 5
-      },
-      {
-        id: 'soft_edge',
-        check: () => values.inner_vision <= 5 && values.creative_handoff >= 5 && values.density_appetite <= 5
-      },
-      {
-        id: 'bold_classic',
-        check: () => values.density_appetite >= 5 && values.reference_harmony >= 9 && values.inner_vision >= 5 && values.certainty >= 9
-      },
-      {
-        id: 'living_story',
-        check: () => archetype && archetype.id === 'mythmaker' || (values.inner_vision === 5 && values.certainty >= 5)
-      }
-    ];
+    const scale = SKIN_SIGHT_DATA.scale;
+    const sorted = [...SKIN_SIGHT_DATA.inkProfiles].sort((a, b) => a.priority - b.priority);
 
-    for (const profileCheck of checks) {
-      if (profileCheck.check()) {
-        return inkProfiles.find(p => p.id === profileCheck.id);
+    for (const profile of sorted) {
+      if (profile.detect(values, scale, archetype)) {
+        return profile;
       }
     }
 
-    return inkProfiles.find(p => p.id === 'living_story');
+    // Fallback to last (living_story)
+    return sorted[sorted.length - 1];
   }
 
   function detectModifiers(values) {
-    const detected = [];
-
-    if (values.certainty <= 2) {
-      detected.push(modifiers.find(m => m.id === 'low_certainty'));
-    }
-    if (values.reference_harmony <= 2) {
-      detected.push(modifiers.find(m => m.id === 'scattered_references'));
-    }
-    if (values.certainty >= 9 && values.reference_harmony >= 9) {
-      detected.push(modifiers.find(m => m.id === 'locked_in'));
-    }
-    if (values.reference_harmony <= 2 && values.density_appetite >= 9) {
-      detected.push(modifiers.find(m => m.id === 'eclectic_taste'));
-    }
-    if (values.inner_vision <= 2) {
-      detected.push(modifiers.find(m => m.id === 'feeling_over_image'));
-    }
-    if (values.inner_vision >= 9 && values.articulation >= 9) {
-      detected.push(modifiers.find(m => m.id === 'image_over_feeling'));
-    }
-    // True middle: all vision questions at middle value (5)
-    if (values.inner_vision === 5 &&
-        values.reference_harmony === 5 &&
-        values.density_appetite === 5 &&
-        values.certainty === 5) {
-      detected.push(modifiers.find(m => m.id === 'true_middle'));
-    }
-    if ((values.density_appetite >= 9 || values.density_appetite <= 2) && values.certainty <= 5) {
-      detected.push(modifiers.find(m => m.id === 'style_curious'));
-    }
-
-    return detected.filter(Boolean);
+    const scale = SKIN_SIGHT_DATA.scale;
+    return SKIN_SIGHT_DATA.modifiers.filter(mod => mod.detect(values, scale));
   }
 
   function detectFlags(values, archetype, details) {
+    const scale = SKIN_SIGHT_DATA.scale;
     const detected = [];
 
-    // Intuition flags
-    if (values.incubation <= 2 && values.permanence_comfort <= 2) {
-      detected.push({ ...flags.intuition[0] }); // Impulse Alert
-    }
-    if (values.body_intuition >= 9 && values.canvas_state <= 2) {
-      detected.push({ ...flags.intuition[1] }); // Pain Blind
-    }
-    if (values.canvas_state <= 2 && values.certainty >= 9) {
-      detected.push({ ...flags.intuition[2] }); // Fresh but Certain
-    }
-    if (values.incubation <= 2 && values.density_appetite >= 9) {
-      detected.push({ ...flags.intuition[3] }); // Rushed Timeline
-    }
-
-    // Vision flags
-    if (values.reference_harmony <= 2 && values.certainty >= 9) {
-      detected.push({ ...flags.vision[0] }); // Pinterest Storm
-    }
-    if (values.inner_vision <= 2 && values.certainty >= 9) {
-      detected.push({ ...flags.vision[1] }); // Fog Vision
-    }
-    if (details && values.density_appetite >= 9 && (details.size === 'tiny' || details.size === 'small')) {
-      detected.push({ ...flags.vision[2] }); // Size vs Detail
-    }
-    if (values.density_appetite === 5 && values.certainty <= 2) {
-      detected.push({ ...flags.vision[3] }); // Complexity Unclear
-    }
-
-    // Style flags
-    if (values.creative_handoff >= 9 && values.openness_to_influence <= 2) {
-      detected.push({ ...flags.style[0] }); // Control Paradox
-    }
-    if (values.articulation <= 2 && values.creative_handoff <= 2) {
-      detected.push({ ...flags.style[1] }); // Silent Director
-    }
-    if (values.iteration_comfort >= 9 && values.articulation <= 2) {
-      detected.push({ ...flags.style[2] }); // Perfectionist Loop
-    }
-    if (values.iteration_comfort <= 2 && values.articulation <= 5) {
-      detected.push({ ...flags.style[3] }); // One Shot Pressure
-    }
-    if (values.openness_to_influence >= 9 && values.iteration_comfort <= 2) {
-      detected.push({ ...flags.style[4] }); // Yes Then No
-    }
-
-    // Cross section flags
-    if (details && values.density_appetite >= 9 && details.budget === 'under_200') {
-      detected.push({ ...flags.cross[0] }); // Champagne / Beer
-    }
-    if (values.inner_vision <= 2 && values.creative_handoff <= 2 && values.articulation <= 2) {
-      detected.push({ ...flags.cross[1] }); // Ghost Handoff
-    }
-    if (values.canvas_state >= 9 && values.certainty <= 2 && values.reference_harmony <= 2) {
-      detected.push({ ...flags.cross[2] }); // Experienced but Lost
-    }
-    if (archetype && archetype.id === 'attuned' && values.incubation <= 2) {
-      detected.push({ ...flags.cross[3] }); // Ready but Rushed
-    }
-    if (details && values.incubation <= 2 && details.timeline === 'asap') {
-      detected.push({ ...flags.cross[4] }); // Timeline Crunch
+    // Check all flag categories
+    for (const category of ['intuition', 'vision', 'style', 'cross']) {
+      for (const flag of SKIN_SIGHT_DATA.flags[category]) {
+        if (flag.detect(values, scale, archetype, details)) {
+          detected.push({ ...flag, category });
+        }
+      }
     }
 
     return detected;
   }
 
   function detectPositiveFlags(values, archetype, flagCount) {
-    const detected = [];
-
-    // Calculate section averages
-    const intuitionAvg = (values.incubation + values.permanence_comfort + values.body_intuition + values.canvas_state) / 4;
-    const visionAvg = (values.inner_vision + values.reference_harmony + values.density_appetite + values.certainty) / 4;
-    const styleAvg = (values.creative_handoff + values.iteration_comfort + values.openness_to_influence + values.articulation) / 4;
-
-    if (intuitionAvg >= 7 && visionAvg >= 7 && styleAvg >= 7 && flagCount === 0) {
-      detected.push(positiveFlags[0]); // Dream Client
-    }
-    if (values.canvas_state >= 5 && archetype && archetype.id === 'rhythm' && flagCount === 0) {
-      detected.push(positiveFlags[1]); // Smooth Repeat
-    }
-    if (archetype && archetype.id === 'muse' && values.openness_to_influence >= 9 && values.creative_handoff >= 9) {
-      detected.push(positiveFlags[2]); // Trust Given
-    }
-
-    return detected.filter(Boolean);
+    const scale = SKIN_SIGHT_DATA.scale;
+    return SKIN_SIGHT_DATA.positiveFlags.filter(pf => pf.detect(values, scale, archetype, flagCount));
   }
 
   function calculateSignalClarity(flagCount, detectedFlags) {
-    const hasGhostHandoff = detectedFlags.some(f => f.id === 'ghost_handoff');
-    const hasSilentDirector = detectedFlags.some(f => f.id === 'silent_director');
+    // Special case: Ghost Handoff + Silent Director = Chaotic
+    const hasGhost = detectedFlags.some(f => f.id === 'ghost_handoff');
+    const hasSilent = detectedFlags.some(f => f.id === 'silent_director');
 
-    if (flagCount >= 5 || (hasGhostHandoff && hasSilentDirector)) {
-      return signalClarity.levels[3]; // Chaotic
+    if (hasGhost && hasSilent) {
+      return SKIN_SIGHT_DATA.signalClarity.find(s => s.id === 'chaotic');
     }
-    if (flagCount >= 3) {
-      return signalClarity.levels[2]; // Mixed
-    }
-    if (flagCount >= 1) {
-      return signalClarity.levels[1]; // Some Noise
-    }
-    return signalClarity.levels[0]; // Clear
+
+    // Otherwise, find by count
+    return SKIN_SIGHT_DATA.signalClarity.find(s => flagCount >= s.min && flagCount <= s.max);
   }
 
   // ============================================================

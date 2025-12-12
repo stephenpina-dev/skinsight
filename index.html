@@ -13,6 +13,7 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="test-harness.css">
 </head>
 <body>
   <!-- Skip Link for Accessibility -->
@@ -28,7 +29,6 @@
     <section id="landing" class="screen active">
       <div class="container">
         <div class="logo-area" id="logo-area">
-          <!-- Logo or text inserted via JS based on config -->
           <h1 class="logo-text" id="logo-text">Skin Sight</h1>
         </div>
 
@@ -44,8 +44,45 @@
         <p class="text-tiny text-muted powered-by">
           Powered by Skin Sight
         </p>
+        <button class="text-tiny text-muted privacy-link" id="privacy-link">
+          Privacy Notice
+        </button>
       </div>
     </section>
+
+    <!-- ==================== PRIVACY MODAL ==================== -->
+    <div class="modal-overlay" id="privacy-modal" aria-hidden="true">
+      <div class="modal" role="dialog" aria-labelledby="privacy-title">
+        <button class="modal-close" id="privacy-close" aria-label="Close">&times;</button>
+        <h2 id="privacy-title">Privacy Notice</h2>
+
+        <div class="modal-content">
+          <h3>What Information We Collect</h3>
+          <p>When you complete a Skin Sight quiz, you provide:</p>
+          <ul>
+            <li>Your quiz answers (12 questions)</li>
+            <li>Project details (placement, size, budget, timeline)</li>
+            <li>Contact information (name, email, optionally Instagram/phone)</li>
+            <li>Optional reference links or notes</li>
+          </ul>
+
+          <h3>How Your Information Is Used</h3>
+          <p>Your quiz answers are processed entirely in your browser to generate your archetype and profile. No quiz data is stored on Skin Sight servers.</p>
+          <p>When you submit the form, your complete profile is sent directly to the tattoo artist or studio whose quiz you completed.</p>
+
+          <h3>Who Receives Your Information</h3>
+          <p>Only the tattoo artist or studio whose quiz link you used. Skin Sight does not:</p>
+          <ul>
+            <li>Store your personal information</li>
+            <li>Sell your data to third parties</li>
+            <li>Use your information for marketing</li>
+          </ul>
+
+          <h3>Cookies and Tracking</h3>
+          <p>Skin Sight quizzes do not use tracking cookies, analytics software, or advertising pixels. We use only essential browser storage (localStorage) to save your quiz progress if you leave and return.</p>
+        </div>
+      </div>
+    </div>
 
     <!-- ==================== SECTION 1: YOUR INTUITION ==================== -->
     <section id="section-intuition" class="screen quiz-section" data-section="intuition">
@@ -673,8 +710,12 @@
     <p>Submitting...</p>
   </div>
 
+  <!-- Test Harness Container (hidden by default, shown via ?test=true) -->
+  <div id="test-harness"></div>
+
   <!-- Scripts -->
   <script src="data.js"></script>
   <script src="app.js"></script>
+  <script src="test-harness.js"></script>
 </body>
 </html>

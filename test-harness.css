@@ -1,0 +1,396 @@
+/* ============================================================
+   SKIN SIGHT TEST HARNESS STYLES
+   ============================================================ */
+
+#test-harness {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  max-width: 100vw;
+  height: 100vh;
+  background: #1a1a2e;
+  color: #eee;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 12px;
+  z-index: 10000;
+  overflow-y: auto;
+  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.test-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #16213e;
+  border-bottom: 1px solid #0f3460;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.test-header h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #e94560;
+  letter-spacing: 1px;
+}
+
+.test-close {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.test-close:hover {
+  color: #fff;
+}
+
+.test-body {
+  padding: 16px;
+}
+
+.test-section {
+  margin-bottom: 24px;
+}
+
+.test-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   INPUT ROWS
+   ============================================================ */
+
+.test-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.test-input-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.test-input-row label {
+  flex: 1;
+  font-size: 11px;
+  color: #aaa;
+}
+
+.test-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.test-value-btn {
+  width: 32px;
+  height: 28px;
+  background: #16213e;
+  border: 1px solid #0f3460;
+  color: #888;
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.test-value-btn:hover {
+  background: #1f4068;
+  color: #fff;
+}
+
+.test-value-btn.active {
+  background: #e94560;
+  border-color: #e94560;
+  color: #fff;
+}
+
+/* ============================================================
+   DETAILS
+   ============================================================ */
+
+.test-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.test-details select {
+  width: 120px;
+  padding: 6px 8px;
+  background: #16213e;
+  border: 1px solid #0f3460;
+  color: #eee;
+  font-size: 11px;
+  font-family: inherit;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.test-calculate-btn {
+  width: 100%;
+  padding: 12px;
+  background: #e94560;
+  border: none;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-bottom: 24px;
+  transition: background 0.15s ease;
+}
+
+.test-calculate-btn:hover {
+  background: #ff6b6b;
+}
+
+/* ============================================================
+   PRESETS
+   ============================================================ */
+
+.test-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.test-preset-btn {
+  padding: 6px 10px;
+  background: #16213e;
+  border: 1px solid #0f3460;
+  color: #aaa;
+  font-size: 10px;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.test-preset-btn:hover {
+  background: #1f4068;
+  color: #fff;
+  border-color: #1f4068;
+}
+
+/* ============================================================
+   RESULTS
+   ============================================================ */
+
+.test-outputs {
+  background: #16213e;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.test-placeholder {
+  color: #666;
+  text-align: center;
+  font-style: italic;
+}
+
+.test-error {
+  color: #e94560;
+  text-align: center;
+}
+
+.test-result-block {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #0f3460;
+}
+
+.test-result-block:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.test-result-label {
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.test-result-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e94560;
+}
+
+.test-result-detection {
+  font-size: 10px;
+  color: #666;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.test-result-none {
+  color: #555;
+  font-style: italic;
+}
+
+.test-result-flag {
+  padding: 6px 8px;
+  margin: 4px 0;
+  background: #1a1a2e;
+  border-radius: 4px;
+}
+
+.test-flag-severity {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.test-flag-severity.high {
+  background: #dc3545;
+  color: #fff;
+}
+
+.test-flag-severity.medium {
+  background: #ffc107;
+  color: #000;
+}
+
+.test-flag-severity.low {
+  background: #17a2b8;
+  color: #fff;
+}
+
+.test-result-modifier,
+.test-result-positive {
+  padding: 4px 0;
+}
+
+.test-result-signal {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.test-result-signal.clear {
+  color: #28a745;
+}
+
+.test-result-signal.some_noise {
+  color: #ffc107;
+}
+
+.test-result-signal.mixed {
+  color: #fd7e14;
+}
+
+.test-result-signal.chaotic {
+  color: #dc3545;
+}
+
+/* ============================================================
+   BATCH TEST
+   ============================================================ */
+
+.test-batch-btn {
+  width: 100%;
+  padding: 10px;
+  background: #0f3460;
+  border: none;
+  color: #fff;
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.test-batch-btn:hover {
+  background: #1f4068;
+}
+
+.test-batch-summary {
+  padding: 12px;
+  background: #16213e;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.test-batch-item {
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  border-left: 3px solid;
+}
+
+.test-batch-item.passed {
+  background: rgba(40, 167, 69, 0.1);
+  border-color: #28a745;
+}
+
+.test-batch-item.failed {
+  background: rgba(220, 53, 69, 0.1);
+  border-color: #dc3545;
+}
+
+.test-batch-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.test-batch-details {
+  font-size: 10px;
+  color: #888;
+}
+
+.test-batch-checks {
+  margin-top: 8px;
+  font-size: 10px;
+}
+
+.check-pass {
+  color: #28a745;
+}
+
+.check-fail {
+  color: #dc3545;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 480px) {
+  #test-harness {
+    width: 100vw;
+  }
+}

@@ -260,6 +260,14 @@ p:last-child {
 
 .logo-area {
   margin-bottom: var(--space-xxl);
+  display: flex;
+  justify-content: center;
+}
+
+.landing-logo {
+  max-width: 280px;
+  width: 100%;
+  height: auto;
 }
 
 .logo {
@@ -1032,6 +1040,113 @@ textarea::placeholder {
     font-size: 1.0625rem;
   }
 }
+
+/* ============================================================
+   PRIVACY MODAL
+   ============================================================ */
+
+.privacy-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: var(--space-sm);
+  padding: 0;
+}
+
+.privacy-link:hover {
+  color: var(--text-secondary);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-base), visibility var(--transition-base);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: var(--space-xl);
+  position: relative;
+  transform: translateY(20px);
+  transition: transform var(--transition-base);
+}
+
+.modal-overlay.active .modal {
+  transform: translateY(0);
+}
+
+.modal-close {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--space-xs);
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: var(--text-primary);
+}
+
+.modal h2 {
+  margin-bottom: var(--space-lg);
+  padding-right: var(--space-xl);
+}
+
+.modal-content h3 {
+  font-size: 1rem;
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.modal-content h3:first-child {
+  margin-top: 0;
+}
+
+.modal-content p {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.modal-content ul {
+  color: var(--text-secondary);
+  margin: 0;
+  padding-left: var(--space-lg);
+}
+
+.modal-content li {
+  margin-bottom: var(--space-xs);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
