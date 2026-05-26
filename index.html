@@ -89,83 +89,70 @@
       <div class="container">
         <div class="section-header">
           <span class="section-number">1 of 3</span>
-          <h2 class="section-title">Your Intuition</h2>
-          <p class="section-subtitle text-secondary">Do you know yourself?</p>
+          <h2 class="section-title">Your Instinct</h2>
+          <p class="section-subtitle text-secondary">What pulls you in?</p>
         </div>
 
         <div class="questions-container" id="questions-intuition">
-          <!-- Question 1: Incubation -->
-          <div class="question-card" data-question-id="incubation" data-section="intuition">
-            <h3 class="question-label">How long has this idea been living with you?</h3>
-            <div class="bubble-group">
-              <label class="bubble-option">
-                <input type="radio" name="incubation" value="2" />
-                <span class="bubble-text">It just found me</span>
-              </label>
-              <label class="bubble-option">
-                <input type="radio" name="incubation" value="5" />
-                <span class="bubble-text">It's been brewing for a while</span>
-              </label>
-              <label class="bubble-option">
-                <input type="radio" name="incubation" value="9" />
-                <span class="bubble-text">Years. It's part of me now.</span>
-              </label>
-            </div>
+          <!-- Question 1: Visual chip selector (STUB - not yet wired, emits no value) -->
+          <div class="question-card question-card-stub" data-question-id="visual_chip" data-section="intuition">
+            <h3 class="question-label">Which of these pulls you in?</h3>
+            <p class="stub-note text-secondary">[ Visual chip selector goes here — coming in a later pass. Not yet scored. ]</p>
           </div>
 
-          <!-- Question 2: Permanence Comfort -->
-          <div class="question-card" data-question-id="permanence_comfort" data-section="intuition">
-            <h3 class="question-label">How do you feel about forever?</h3>
-            <div class="bubble-group">
-              <label class="bubble-option">
-                <input type="radio" name="permanence_comfort" value="2" />
-                <span class="bubble-text">Honestly, it's a big word</span>
-              </label>
-              <label class="bubble-option">
-                <input type="radio" name="permanence_comfort" value="5" />
-                <span class="bubble-text">I'm getting more comfortable with it</span>
-              </label>
-              <label class="bubble-option">
-                <input type="radio" name="permanence_comfort" value="9" />
-                <span class="bubble-text">I trust my choices to last</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Question 3: Body Intuition -->
+          <!-- Question 2: Body Intuition (relationship with body framing) -->
           <div class="question-card" data-question-id="body_intuition" data-section="intuition">
-            <h3 class="question-label">How well do you know what your body can handle?</h3>
+            <h3 class="question-label">What's your relationship with your body?</h3>
             <div class="bubble-group">
               <label class="bubble-option">
                 <input type="radio" name="body_intuition" value="2" />
-                <span class="bubble-text">Still learning</span>
+                <span class="bubble-text">Still learning what it can take</span>
               </label>
               <label class="bubble-option">
                 <input type="radio" name="body_intuition" value="5" />
-                <span class="bubble-text">I have a decent sense</span>
+                <span class="bubble-text">I've got a decent read on it</span>
               </label>
               <label class="bubble-option">
                 <input type="radio" name="body_intuition" value="9" />
-                <span class="bubble-text">I know my limits</span>
+                <span class="bubble-text">I know exactly what it can handle</span>
               </label>
             </div>
           </div>
 
-          <!-- Question 4: Canvas State -->
-          <div class="question-card" data-question-id="canvas_state" data-section="intuition">
-            <h3 class="question-label">Your skin so far...</h3>
+          <!-- Question 3: Incubation (role of meaning framing) -->
+          <div class="question-card" data-question-id="incubation" data-section="intuition">
+            <h3 class="question-label">What role does meaning play?</h3>
             <div class="bubble-group">
               <label class="bubble-option">
-                <input type="radio" name="canvas_state" value="2" />
-                <span class="bubble-text">Blank page</span>
+                <input type="radio" name="incubation" value="2" />
+                <span class="bubble-text">It just found me — no big story yet</span>
               </label>
               <label class="bubble-option">
-                <input type="radio" name="canvas_state" value="5" />
-                <span class="bubble-text">A few pieces</span>
+                <input type="radio" name="incubation" value="5" />
+                <span class="bubble-text">It's taking on meaning as it sits with me</span>
               </label>
               <label class="bubble-option">
-                <input type="radio" name="canvas_state" value="9" />
-                <span class="bubble-text">Already telling stories</span>
+                <input type="radio" name="incubation" value="9" />
+                <span class="bubble-text">It's carried deep meaning for years</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 4: Inner Vision (specificity framing) -->
+          <div class="question-card" data-question-id="inner_vision" data-section="intuition">
+            <h3 class="question-label">How specific is your vision?</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="inner_vision" value="2" />
+                <span class="bubble-text">I feel it more than I picture it</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="inner_vision" value="5" />
+                <span class="bubble-text">I have a rough picture</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="inner_vision" value="9" />
+                <span class="bubble-text">I can see it down to the detail</span>
               </label>
             </div>
           </div>
@@ -184,83 +171,83 @@
       <div class="container">
         <div class="section-header">
           <span class="section-number">2 of 3</span>
-          <h2 class="section-title">Your Vision</h2>
-          <p class="section-subtitle text-secondary">Do you know what you want?</p>
+          <h2 class="section-title">Your Process</h2>
+          <p class="section-subtitle text-secondary">How do you like to work?</p>
         </div>
 
         <div class="questions-container" id="questions-vision">
-          <!-- Question 5: Inner Vision -->
-          <div class="question-card" data-question-id="inner_vision" data-section="vision">
-            <h3 class="question-label">When you picture it...</h3>
-            <div class="bubble-group">
-              <label class="bubble-option">
-                <input type="radio" name="inner_vision" value="2" />
-                <span class="bubble-text">I feel it more than see it</span>
-              </label>
-              <label class="bubble-option">
-                <input type="radio" name="inner_vision" value="5" />
-                <span class="bubble-text">I have a rough sense</span>
-              </label>
-              <label class="bubble-option">
-                <input type="radio" name="inner_vision" value="9" />
-                <span class="bubble-text">I see it clearly</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Question 6: Reference Harmony -->
-          <div class="question-card" data-question-id="reference_harmony" data-section="vision">
-            <h3 class="question-label">The images you're drawn to...</h3>
-            <div class="bubble-group">
-              <label class="bubble-option">
-                <input type="radio" name="reference_harmony" value="2" />
-                <span class="bubble-text">All over the place</span>
-              </label>
-              <label class="bubble-option">
-                <input type="radio" name="reference_harmony" value="5" />
-                <span class="bubble-text">Starting to find a thread</span>
-              </label>
-              <label class="bubble-option">
-                <input type="radio" name="reference_harmony" value="9" />
-                <span class="bubble-text">Share a common thread</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Question 7: Density Appetite -->
-          <div class="question-card" data-question-id="density_appetite" data-section="vision">
-            <h3 class="question-label">Your visual taste...</h3>
-            <div class="bubble-group">
-              <label class="bubble-option">
-                <input type="radio" name="density_appetite" value="2" />
-                <span class="bubble-text">Breathing room. Less is more.</span>
-              </label>
-              <label class="bubble-option">
-                <input type="radio" name="density_appetite" value="5" />
-                <span class="bubble-text">Somewhere in the middle</span>
-              </label>
-              <label class="bubble-option">
-                <input type="radio" name="density_appetite" value="9" />
-                <span class="bubble-text">Every inch alive</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Question 8: Certainty -->
+          <!-- Question 5: Certainty (clarity framing) -->
           <div class="question-card" data-question-id="certainty" data-section="vision">
-            <h3 class="question-label">How sure are you?</h3>
+            <h3 class="question-label">How clear is your vision?</h3>
             <div class="bubble-group">
               <label class="bubble-option">
                 <input type="radio" name="certainty" value="2" />
-                <span class="bubble-text">Still exploring</span>
+                <span class="bubble-text">Still exploring — nothing's locked</span>
               </label>
               <label class="bubble-option">
                 <input type="radio" name="certainty" value="5" />
-                <span class="bubble-text">Getting clearer</span>
+                <span class="bubble-text">It's coming into focus</span>
               </label>
               <label class="bubble-option">
                 <input type="radio" name="certainty" value="9" />
-                <span class="bubble-text">Completely decided</span>
+                <span class="bubble-text">Crystal clear and decided</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 6: Creative Handoff (collaboration framing) -->
+          <div class="question-card" data-question-id="creative_handoff" data-section="vision">
+            <h3 class="question-label">How do you feel about artistic collaboration?</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="creative_handoff" value="2" />
+                <span class="bubble-text">I'd rather steer it myself</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="creative_handoff" value="5" />
+                <span class="bubble-text">Let's shape it together</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="creative_handoff" value="9" />
+                <span class="bubble-text">I'd love for you to run with it</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 7: Openness to Influence (creative decisions framing) -->
+          <div class="question-card" data-question-id="openness_to_influence" data-section="vision">
+            <h3 class="question-label">How do you handle creative decisions?</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="openness_to_influence" value="2" />
+                <span class="bubble-text">I trust my own call</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="openness_to_influence" value="5" />
+                <span class="bubble-text">I'll weigh your input</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="openness_to_influence" value="9" />
+                <span class="bubble-text">I'm here for your expertise</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 8: Iteration Comfort (time pressure framing) -->
+          <div class="question-card" data-question-id="iteration_comfort" data-section="vision">
+            <h3 class="question-label">What's your relationship with time pressure?</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="iteration_comfort" value="2" />
+                <span class="bubble-text">I'd rather get it right in one shot</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="iteration_comfort" value="5" />
+                <span class="bubble-text">A few rounds doesn't bother me</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="iteration_comfort" value="9" />
+                <span class="bubble-text">No rush — refining is part of it</span>
               </label>
             </div>
           </div>
@@ -279,71 +266,90 @@
       <div class="container">
         <div class="section-header">
           <span class="section-number">3 of 3</span>
-          <h2 class="section-title">Your Style</h2>
-          <p class="section-subtitle text-secondary">Do you know how you work?</p>
+          <h2 class="section-title">Your Depth</h2>
+          <p class="section-subtitle text-secondary">What's underneath it?</p>
         </div>
 
         <div class="questions-container" id="questions-style">
-          <!-- Question 9: Creative Handoff -->
-          <div class="question-card" data-question-id="creative_handoff" data-section="style">
-            <h3 class="question-label">When it comes to the design...</h3>
+          <!-- Question 9: Canvas State (skin history framing) -->
+          <div class="question-card" data-question-id="canvas_state" data-section="style">
+            <h3 class="question-label">How much of your story is already on your skin?</h3>
             <div class="bubble-group">
               <label class="bubble-option">
-                <input type="radio" name="creative_handoff" value="2" />
-                <span class="bubble-text">I want to guide it</span>
+                <input type="radio" name="canvas_state" value="2" />
+                <span class="bubble-text">This is my first</span>
               </label>
               <label class="bubble-option">
-                <input type="radio" name="creative_handoff" value="5" />
-                <span class="bubble-text">Collaborate with me</span>
+                <input type="radio" name="canvas_state" value="5" />
+                <span class="bubble-text">I have a few pieces</span>
               </label>
               <label class="bubble-option">
-                <input type="radio" name="creative_handoff" value="9" />
-                <span class="bubble-text">Surprise me</span>
+                <input type="radio" name="canvas_state" value="9" />
+                <span class="bubble-text">I'm well into my collection</span>
               </label>
             </div>
           </div>
 
-          <!-- Question 10: Iteration Comfort -->
-          <div class="question-card" data-question-id="iteration_comfort" data-section="style">
-            <h3 class="question-label">Your comfort with back and forth...</h3>
+          <!-- Question 10: Reference Harmony (shared thread framing) -->
+          <div class="question-card" data-question-id="reference_harmony" data-section="style">
+            <h3 class="question-label">Do the images you've gathered share a thread?</h3>
             <div class="bubble-group">
               <label class="bubble-option">
-                <input type="radio" name="iteration_comfort" value="2" />
-                <span class="bubble-text">I'd rather get it right the first time</span>
+                <input type="radio" name="reference_harmony" value="2" />
+                <span class="bubble-text">They're all over the place</span>
               </label>
               <label class="bubble-option">
-                <input type="radio" name="iteration_comfort" value="5" />
-                <span class="bubble-text">A few rounds is fine</span>
+                <input type="radio" name="reference_harmony" value="5" />
+                <span class="bubble-text">A thread is starting to show</span>
               </label>
               <label class="bubble-option">
-                <input type="radio" name="iteration_comfort" value="9" />
-                <span class="bubble-text">Refining is part of the process</span>
+                <input type="radio" name="reference_harmony" value="9" />
+                <span class="bubble-text">They clearly share one direction</span>
               </label>
             </div>
           </div>
 
-          <!-- Question 11: Openness to Influence -->
-          <div class="question-card" data-question-id="openness_to_influence" data-section="style">
-            <h3 class="question-label">If the artist suggests a different direction...</h3>
+          <!-- Question 11: Density Appetite (pain/discomfort framing via size/intensity) -->
+          <div class="question-card" data-question-id="density_appetite" data-section="style">
+            <h3 class="question-label">How do you approach pain/discomfort?</h3>
             <div class="bubble-group">
               <label class="bubble-option">
-                <input type="radio" name="openness_to_influence" value="2" />
-                <span class="bubble-text">I'd rather stay the course</span>
+                <input type="radio" name="density_appetite" value="2" />
+                <span class="bubble-text">Keep it small and easy</span>
               </label>
               <label class="bubble-option">
-                <input type="radio" name="openness_to_influence" value="5" />
-                <span class="bubble-text">I'll hear them out</span>
+                <input type="radio" name="density_appetite" value="5" />
+                <span class="bubble-text">I can sit for a moderate piece</span>
               </label>
               <label class="bubble-option">
-                <input type="radio" name="openness_to_influence" value="9" />
-                <span class="bubble-text">I'm here for their perspective</span>
+                <input type="radio" name="density_appetite" value="9" />
+                <span class="bubble-text">Bring on something big and intensive</span>
               </label>
             </div>
           </div>
 
-          <!-- Question 12: Articulation -->
+          <!-- Question 12: Permanence Comfort -->
+          <div class="question-card" data-question-id="permanence_comfort" data-section="style">
+            <h3 class="question-label">How do you feel about permanence?</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="permanence_comfort" value="2" />
+                <span class="bubble-text">Honestly, forever is a lot</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="permanence_comfort" value="5" />
+                <span class="bubble-text">I'm making peace with it</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="permanence_comfort" value="9" />
+                <span class="bubble-text">I trust my choices to last</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 13: Articulation (put into words framing) -->
           <div class="question-card" data-question-id="articulation" data-section="style">
-            <h3 class="question-label">Putting your vision into words...</h3>
+            <h3 class="question-label">How easily can you put it into words?</h3>
             <div class="bubble-group">
               <label class="bubble-option">
                 <input type="radio" name="articulation" value="2" />

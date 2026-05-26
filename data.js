@@ -16,117 +16,126 @@ const SKIN_SIGHT_DATA = {
   },
 
   // ============================================================
-  // QUESTIONS (12 total, 3 options each)
+  // QUESTIONS (display order: 12 scored sliders + 1 stubbed chip)
+  // NOTE: documentation only — the rendered order/copy lives in index.html.
+  // Scored slider IDs and their 2/5/9 values are unchanged; detection reads by ID.
   // ============================================================
 
   questions: {
-    intuition: [
+    intuition: [ // Display section "Your Instinct"
       {
-        id: "incubation",
-        label: "How long has this idea been living with you?",
-        options: [
-          { value: 2, text: "It just found me" },
-          { value: 5, text: "It's been brewing for a while" },
-          { value: 9, text: "Years. It's part of me now." }
-        ]
-      },
-      {
-        id: "permanence_comfort",
-        label: "How do you feel about forever?",
-        options: [
-          { value: 2, text: "Honestly, it's a big word" },
-          { value: 5, text: "I'm getting more comfortable with it" },
-          { value: 9, text: "I trust my choices to last" }
-        ]
+        // Q1: visual chip selector — STUBBED, not yet wired, emits no value
+        id: "visual_chip",
+        label: "Which of these pulls you in?",
+        stub: true,
+        options: []
       },
       {
         id: "body_intuition",
-        label: "How well do you know what your body can handle?",
+        label: "What's your relationship with your body?",
         options: [
-          { value: 2, text: "Still learning" },
-          { value: 5, text: "I have a decent sense" },
-          { value: 9, text: "I know my limits" }
+          { value: 2, text: "Still learning what it can take" },
+          { value: 5, text: "I've got a decent read on it" },
+          { value: 9, text: "I know exactly what it can handle" }
         ]
       },
       {
-        id: "canvas_state",
-        label: "Your skin so far...",
+        id: "incubation",
+        label: "What role does meaning play?",
         options: [
-          { value: 2, text: "Blank page" },
-          { value: 5, text: "A few pieces" },
-          { value: 9, text: "Already telling stories" }
+          { value: 2, text: "It just found me — no big story yet" },
+          { value: 5, text: "It's taking on meaning as it sits with me" },
+          { value: 9, text: "It's carried deep meaning for years" }
         ]
-      }
-    ],
-    vision: [
+      },
       {
         id: "inner_vision",
-        label: "When you picture it...",
+        label: "How specific is your vision?",
         options: [
-          { value: 2, text: "I feel it more than see it" },
-          { value: 5, text: "I have a rough sense" },
-          { value: 9, text: "I see it clearly" }
-        ]
-      },
-      {
-        id: "reference_harmony",
-        label: "The images you're drawn to...",
-        options: [
-          { value: 2, text: "All over the place" },
-          { value: 5, text: "Starting to find a thread" },
-          { value: 9, text: "Share a common thread" }
-        ]
-      },
-      {
-        id: "density_appetite",
-        label: "Your visual taste...",
-        options: [
-          { value: 2, text: "Breathing room. Less is more." },
-          { value: 5, text: "Somewhere in the middle" },
-          { value: 9, text: "Every inch alive" }
-        ]
-      },
-      {
-        id: "certainty",
-        label: "How sure are you?",
-        options: [
-          { value: 2, text: "Still exploring" },
-          { value: 5, text: "Getting clearer" },
-          { value: 9, text: "Completely decided" }
+          { value: 2, text: "I feel it more than I picture it" },
+          { value: 5, text: "I have a rough picture" },
+          { value: 9, text: "I can see it down to the detail" }
         ]
       }
     ],
-    style: [
+    vision: [ // Display section "Your Process"
       {
-        id: "creative_handoff",
-        label: "When it comes to the design...",
+        id: "certainty",
+        label: "How clear is your vision?",
         options: [
-          { value: 2, text: "I want to guide it" },
-          { value: 5, text: "Collaborate with me" },
-          { value: 9, text: "Surprise me" }
+          { value: 2, text: "Still exploring — nothing's locked" },
+          { value: 5, text: "It's coming into focus" },
+          { value: 9, text: "Crystal clear and decided" }
         ]
       },
       {
-        id: "iteration_comfort",
-        label: "Your comfort with back and forth...",
+        id: "creative_handoff",
+        label: "How do you feel about artistic collaboration?",
         options: [
-          { value: 2, text: "I'd rather get it right the first time" },
-          { value: 5, text: "A few rounds is fine" },
-          { value: 9, text: "Refining is part of the process" }
+          { value: 2, text: "I'd rather steer it myself" },
+          { value: 5, text: "Let's shape it together" },
+          { value: 9, text: "I'd love for you to run with it" }
         ]
       },
       {
         id: "openness_to_influence",
-        label: "If the artist suggests a different direction...",
+        label: "How do you handle creative decisions?",
         options: [
-          { value: 2, text: "I'd rather stay the course" },
-          { value: 5, text: "I'll hear them out" },
-          { value: 9, text: "I'm here for their perspective" }
+          { value: 2, text: "I trust my own call" },
+          { value: 5, text: "I'll weigh your input" },
+          { value: 9, text: "I'm here for your expertise" }
+        ]
+      },
+      {
+        id: "iteration_comfort",
+        label: "What's your relationship with time pressure?",
+        options: [
+          { value: 2, text: "I'd rather get it right in one shot" },
+          { value: 5, text: "A few rounds doesn't bother me" },
+          { value: 9, text: "No rush — refining is part of it" }
+        ]
+      }
+    ],
+    style: [ // Display section "Your Depth"
+      {
+        id: "canvas_state",
+        label: "How much of your story is already on your skin?",
+        options: [
+          { value: 2, text: "This is my first" },
+          { value: 5, text: "I have a few pieces" },
+          { value: 9, text: "I'm well into my collection" }
+        ]
+      },
+      {
+        id: "reference_harmony",
+        label: "Do the images you've gathered share a thread?",
+        options: [
+          { value: 2, text: "They're all over the place" },
+          { value: 5, text: "A thread is starting to show" },
+          { value: 9, text: "They clearly share one direction" }
+        ]
+      },
+      {
+        id: "density_appetite",
+        label: "How do you approach pain/discomfort?",
+        options: [
+          { value: 2, text: "Keep it small and easy" },
+          { value: 5, text: "I can sit for a moderate piece" },
+          { value: 9, text: "Bring on something big and intensive" }
+        ]
+      },
+      {
+        id: "permanence_comfort",
+        label: "How do you feel about permanence?",
+        options: [
+          { value: 2, text: "Honestly, forever is a lot" },
+          { value: 5, text: "I'm making peace with it" },
+          { value: 9, text: "I trust my choices to last" }
         ]
       },
       {
         id: "articulation",
-        label: "Putting your vision into words...",
+        label: "How easily can you put it into words?",
         options: [
           { value: 2, text: "It's hard to explain" },
           { value: 5, text: "I can get the gist across" },

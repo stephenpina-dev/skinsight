@@ -42,24 +42,26 @@
     const container = document.getElementById('test-harness');
     if (!container) return;
 
+    // Display order matches the reordered quiz (12 scored sliders; visual_chip stub is not scored).
+    // IDs are unchanged, so detection/presets are unaffected by the order.
     const questionIds = [
-      'incubation', 'permanence_comfort', 'body_intuition', 'canvas_state',
-      'inner_vision', 'reference_harmony', 'density_appetite', 'certainty',
-      'creative_handoff', 'iteration_comfort', 'openness_to_influence', 'articulation'
+      'body_intuition', 'incubation', 'inner_vision',
+      'certainty', 'creative_handoff', 'openness_to_influence', 'iteration_comfort',
+      'canvas_state', 'reference_harmony', 'density_appetite', 'permanence_comfort', 'articulation'
     ];
 
     const questionLabels = {
-      incubation: 'Incubation',
+      body_intuition: 'Body',
+      incubation: 'Meaning',
+      inner_vision: 'Specificity',
+      certainty: 'Clarity',
+      creative_handoff: 'Collaboration',
+      openness_to_influence: 'Creative Decisions',
+      iteration_comfort: 'Time Pressure',
+      canvas_state: 'Skin History',
+      reference_harmony: 'References',
+      density_appetite: 'Size / Pain',
       permanence_comfort: 'Permanence',
-      body_intuition: 'Body Intuition',
-      canvas_state: 'Canvas State',
-      inner_vision: 'Inner Vision',
-      reference_harmony: 'Ref Harmony',
-      density_appetite: 'Density',
-      certainty: 'Certainty',
-      creative_handoff: 'Creative Handoff',
-      iteration_comfort: 'Iteration',
-      openness_to_influence: 'Openness',
       articulation: 'Articulation'
     };
 

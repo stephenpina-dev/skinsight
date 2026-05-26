@@ -353,15 +353,17 @@
   function checkSectionComplete(section) {
     let sectionQuestions;
 
+    // NOTE: internal section keys (intuition/vision/style) are unchanged; only the
+    // visible titles and question membership changed in the reorder.
     switch (section) {
-      case 'intuition':
-        sectionQuestions = ['incubation', 'permanence_comfort', 'body_intuition', 'canvas_state'];
+      case 'intuition': // "Your Instinct" — visual_chip is stubbed (no value), so not gated
+        sectionQuestions = ['body_intuition', 'incubation', 'inner_vision'];
         break;
-      case 'vision':
-        sectionQuestions = ['inner_vision', 'reference_harmony', 'density_appetite', 'certainty'];
+      case 'vision': // "Your Process"
+        sectionQuestions = ['certainty', 'creative_handoff', 'openness_to_influence', 'iteration_comfort'];
         break;
-      case 'style':
-        sectionQuestions = ['creative_handoff', 'iteration_comfort', 'openness_to_influence', 'articulation'];
+      case 'style': // "Your Depth"
+        sectionQuestions = ['canvas_state', 'reference_harmony', 'density_appetite', 'permanence_comfort', 'articulation'];
         break;
       default:
         return;
