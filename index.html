@@ -94,10 +94,23 @@
         </div>
 
         <div class="questions-container" id="questions-intuition">
-          <!-- Question 1: Visual chip selector (STUB - not yet wired, emits no value) -->
-          <div class="question-card question-card-stub" data-question-id="visual_chip" data-section="intuition">
-            <h3 class="question-label">Which of these pulls you in?</h3>
-            <p class="stub-note text-secondary">[ Visual chip selector goes here — coming in a later pass. Not yet scored. ]</p>
+          <!-- Question 1: Reference Harmony (warm-up — production copy, moved from Section 3) -->
+          <div class="question-card" data-question-id="reference_harmony" data-section="intuition">
+            <h3 class="question-label">The images you're drawn to...</h3>
+            <div class="bubble-group">
+              <label class="bubble-option">
+                <input type="radio" name="reference_harmony" value="2" />
+                <span class="bubble-text">All over the place</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="reference_harmony" value="5" />
+                <span class="bubble-text">Starting to find a thread</span>
+              </label>
+              <label class="bubble-option">
+                <input type="radio" name="reference_harmony" value="9" />
+                <span class="bubble-text">Share a common thread</span>
+              </label>
+            </div>
           </div>
 
           <!-- Question 2: Body Intuition (relationship with body framing) -->
@@ -119,21 +132,21 @@
             </div>
           </div>
 
-          <!-- Question 3: Incubation (role of meaning framing) -->
+          <!-- Question 3: Incubation (production copy) -->
           <div class="question-card" data-question-id="incubation" data-section="intuition">
-            <h3 class="question-label">What role does meaning play?</h3>
+            <h3 class="question-label">How long has this idea been living with you?</h3>
             <div class="bubble-group">
               <label class="bubble-option">
                 <input type="radio" name="incubation" value="2" />
-                <span class="bubble-text">It just found me — no big story yet</span>
+                <span class="bubble-text">It just found me</span>
               </label>
               <label class="bubble-option">
                 <input type="radio" name="incubation" value="5" />
-                <span class="bubble-text">It's taking on meaning as it sits with me</span>
+                <span class="bubble-text">It's been brewing for a while</span>
               </label>
               <label class="bubble-option">
                 <input type="radio" name="incubation" value="9" />
-                <span class="bubble-text">It's carried deep meaning for years</span>
+                <span class="bubble-text">Years. It's part of me now.</span>
               </label>
             </div>
           </div>
@@ -290,45 +303,26 @@
             </div>
           </div>
 
-          <!-- Question 10: Reference Harmony (shared thread framing) -->
-          <div class="question-card" data-question-id="reference_harmony" data-section="style">
-            <h3 class="question-label">Do the images you've gathered share a thread?</h3>
-            <div class="bubble-group">
-              <label class="bubble-option">
-                <input type="radio" name="reference_harmony" value="2" />
-                <span class="bubble-text">They're all over the place</span>
-              </label>
-              <label class="bubble-option">
-                <input type="radio" name="reference_harmony" value="5" />
-                <span class="bubble-text">A thread is starting to show</span>
-              </label>
-              <label class="bubble-option">
-                <input type="radio" name="reference_harmony" value="9" />
-                <span class="bubble-text">They clearly share one direction</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Question 11: Density Appetite (pain/discomfort framing via size/intensity) -->
+          <!-- Question 10: Density Appetite (production copy) -->
           <div class="question-card" data-question-id="density_appetite" data-section="style">
-            <h3 class="question-label">How do you approach pain/discomfort?</h3>
+            <h3 class="question-label">Your visual taste...</h3>
             <div class="bubble-group">
               <label class="bubble-option">
                 <input type="radio" name="density_appetite" value="2" />
-                <span class="bubble-text">Keep it small and easy</span>
+                <span class="bubble-text">Breathing room. Less is more.</span>
               </label>
               <label class="bubble-option">
                 <input type="radio" name="density_appetite" value="5" />
-                <span class="bubble-text">I can sit for a moderate piece</span>
+                <span class="bubble-text">Somewhere in the middle</span>
               </label>
               <label class="bubble-option">
                 <input type="radio" name="density_appetite" value="9" />
-                <span class="bubble-text">Bring on something big and intensive</span>
+                <span class="bubble-text">Every inch alive</span>
               </label>
             </div>
           </div>
 
-          <!-- Question 12: Permanence Comfort -->
+          <!-- Question 11: Permanence Comfort -->
           <div class="question-card" data-question-id="permanence_comfort" data-section="style">
             <h3 class="question-label">How do you feel about permanence?</h3>
             <div class="bubble-group">
@@ -347,7 +341,7 @@
             </div>
           </div>
 
-          <!-- Question 13: Articulation (put into words framing) -->
+          <!-- Question 12: Articulation -->
           <div class="question-card" data-question-id="articulation" data-section="style">
             <h3 class="question-label">How easily can you put it into words?</h3>
             <div class="bubble-group">

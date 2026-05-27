@@ -356,14 +356,14 @@
     // NOTE: internal section keys (intuition/vision/style) are unchanged; only the
     // visible titles and question membership changed in the reorder.
     switch (section) {
-      case 'intuition': // "Your Instinct" — visual_chip is stubbed (no value), so not gated
-        sectionQuestions = ['body_intuition', 'incubation', 'inner_vision'];
+      case 'intuition': // "Your Instinct" — reference_harmony is the warm-up
+        sectionQuestions = ['reference_harmony', 'body_intuition', 'incubation', 'inner_vision'];
         break;
       case 'vision': // "Your Process"
         sectionQuestions = ['certainty', 'creative_handoff', 'openness_to_influence', 'iteration_comfort'];
         break;
       case 'style': // "Your Depth"
-        sectionQuestions = ['canvas_state', 'reference_harmony', 'density_appetite', 'permanence_comfort', 'articulation'];
+        sectionQuestions = ['canvas_state', 'density_appetite', 'permanence_comfort', 'articulation'];
         break;
       default:
         return;

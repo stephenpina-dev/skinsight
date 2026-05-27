@@ -16,7 +16,7 @@ const SKIN_SIGHT_DATA = {
   },
 
   // ============================================================
-  // QUESTIONS (display order: 12 scored sliders + 1 stubbed chip)
+  // QUESTIONS (display order: 12 scored sliders)
   // NOTE: documentation only — the rendered order/copy lives in index.html.
   // Scored slider IDs and their 2/5/9 values are unchanged; detection reads by ID.
   // ============================================================
@@ -24,11 +24,13 @@ const SKIN_SIGHT_DATA = {
   questions: {
     intuition: [ // Display section "Your Instinct"
       {
-        // Q1: visual chip selector — STUBBED, not yet wired, emits no value
-        id: "visual_chip",
-        label: "Which of these pulls you in?",
-        stub: true,
-        options: []
+        id: "reference_harmony",
+        label: "The images you're drawn to...",
+        options: [
+          { value: 2, text: "All over the place" },
+          { value: 5, text: "Starting to find a thread" },
+          { value: 9, text: "Share a common thread" }
+        ]
       },
       {
         id: "body_intuition",
@@ -41,11 +43,11 @@ const SKIN_SIGHT_DATA = {
       },
       {
         id: "incubation",
-        label: "What role does meaning play?",
+        label: "How long has this idea been living with you?",
         options: [
-          { value: 2, text: "It just found me — no big story yet" },
-          { value: 5, text: "It's taking on meaning as it sits with me" },
-          { value: 9, text: "It's carried deep meaning for years" }
+          { value: 2, text: "It just found me" },
+          { value: 5, text: "It's been brewing for a while" },
+          { value: 9, text: "Years. It's part of me now." }
         ]
       },
       {
@@ -107,21 +109,12 @@ const SKIN_SIGHT_DATA = {
         ]
       },
       {
-        id: "reference_harmony",
-        label: "Do the images you've gathered share a thread?",
-        options: [
-          { value: 2, text: "They're all over the place" },
-          { value: 5, text: "A thread is starting to show" },
-          { value: 9, text: "They clearly share one direction" }
-        ]
-      },
-      {
         id: "density_appetite",
-        label: "How do you approach pain/discomfort?",
+        label: "Your visual taste...",
         options: [
-          { value: 2, text: "Keep it small and easy" },
-          { value: 5, text: "I can sit for a moderate piece" },
-          { value: 9, text: "Bring on something big and intensive" }
+          { value: 2, text: "Breathing room. Less is more." },
+          { value: 5, text: "Somewhere in the middle" },
+          { value: 9, text: "Every inch alive" }
         ]
       },
       {

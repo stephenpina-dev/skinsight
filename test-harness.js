@@ -42,25 +42,25 @@
     const container = document.getElementById('test-harness');
     if (!container) return;
 
-    // Display order matches the reordered quiz (12 scored sliders; visual_chip stub is not scored).
+    // Display order matches the reordered quiz (12 scored sliders).
     // IDs are unchanged, so detection/presets are unaffected by the order.
     const questionIds = [
-      'body_intuition', 'incubation', 'inner_vision',
+      'reference_harmony', 'body_intuition', 'incubation', 'inner_vision',
       'certainty', 'creative_handoff', 'openness_to_influence', 'iteration_comfort',
-      'canvas_state', 'reference_harmony', 'density_appetite', 'permanence_comfort', 'articulation'
+      'canvas_state', 'density_appetite', 'permanence_comfort', 'articulation'
     ];
 
     const questionLabels = {
+      reference_harmony: 'References',
       body_intuition: 'Body',
-      incubation: 'Meaning',
+      incubation: 'Incubation',
       inner_vision: 'Specificity',
       certainty: 'Clarity',
       creative_handoff: 'Collaboration',
       openness_to_influence: 'Creative Decisions',
       iteration_comfort: 'Time Pressure',
       canvas_state: 'Skin History',
-      reference_harmony: 'References',
-      density_appetite: 'Size / Pain',
+      density_appetite: 'Density',
       permanence_comfort: 'Permanence',
       articulation: 'Articulation'
     };
