@@ -372,29 +372,19 @@
     <!-- ==================== ARCHETYPE REVEAL ==================== -->
     <section id="reveal" class="screen">
       <div class="container">
-        <div class="reveal-animation">
-          <span class="reveal-sparkle">&#10024;</span>
-          <h1 class="reveal-archetype" id="archetype-name">
-            THE MYTHMAKER
-          </h1>
-          <span class="reveal-sparkle">&#10024;</span>
-        </div>
-
-        <p class="reveal-oneliner" id="archetype-oneliner">
-          "I'm writing my own legend."
-        </p>
+        <!-- Card is the headline (delivers archetype name, quote, ink profile name) -->
+        <div class="archetype-card-mount" id="archetype-card-mount"></div>
 
         <div class="reveal-copy" id="archetype-copy">
-          <!-- Full reveal copy inserted here -->
+          <!-- Archetype reveal copy inserted here -->
         </div>
 
         <div class="divider"></div>
 
+        <!-- Ink profile elaboration: quote + description + style tags -->
         <div class="ink-profile">
-          <h3>Your Ink Profile</h3>
-          <p class="ink-profile-name" id="profile-name">Living Story</p>
           <p class="ink-profile-tagline text-secondary" id="profile-tagline">
-            "The meaning moves with you."
+            <!-- Ink profile tagline inserted here -->
           </p>
           <p class="ink-profile-copy text-secondary" id="profile-copy">
             <!-- Client copy inserted here -->
@@ -403,9 +393,6 @@
             <!-- Style tags inserted here -->
           </div>
         </div>
-
-        <!-- Shareable archetype card (render only — screenshot for now) -->
-        <div class="archetype-card-mount" id="archetype-card-mount"></div>
 
         <button class="btn btn-primary btn-large" id="continue-to-details">
           Continue to Details

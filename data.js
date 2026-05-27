@@ -150,7 +150,7 @@ const SKIN_SIGHT_DATA = {
       detect: (v, s) => v.canvas_state <= s.low,
       detectionDesc: "canvas_state <= low (first tattoo)",
       name: "The Debut",
-      oneLiner: "My first mark. The beginning of something.",
+      oneLiner: "Standing at the edge. Ready to walk through.",
       revealCopy: "Every collection starts with one. You're standing at the edge of something new, and whether you feel nervous, excited, or both, you're here. That says enough. Your skin has been waiting for this moment. The first mark isn't just a tattoo. It's a door. And you're ready to walk through it.",
       artistNote: {
         summary: "First tattoo. No frame of reference.",
@@ -165,7 +165,7 @@ const SKIN_SIGHT_DATA = {
       detect: (v, s) => v.reference_harmony <= s.low && v.certainty <= s.mid && v.inner_vision <= s.mid,
       detectionDesc: "reference_harmony <= low AND certainty <= mid AND inner_vision <= mid",
       name: "The Compass",
-      oneLiner: "I'm not lost. I'm navigating.",
+      oneLiner: "Curious by nature. Gathers before deciding.",
       revealCopy: "You're drawn to many directions right now, and that's not confusion. That's curiosity. You're gathering ideas, sitting with possibilities, letting things marinate. The right artist won't rush you to decide. They'll help you find the thread that connects what you're feeling to what belongs on your skin. You're not lost. You're finding your way.",
       artistNote: {
         summary: "Still exploring. Hasn't landed on a direction.",
@@ -180,7 +180,7 @@ const SKIN_SIGHT_DATA = {
       detect: (v, s) => v.certainty <= s.low && v.articulation <= s.mid && v.creative_handoff >= s.mid,
       detectionDesc: "certainty <= low AND articulation <= mid AND creative_handoff >= mid",
       name: "The Canvas",
-      oneLiner: "I don't know yet. Help me find it.",
+      oneLiner: "Ready to embrace the unknown. Trusts the process.",
       revealCopy: "You know something wants to come through. You just can't name it yet. That's not a problem. That's an invitation. You're open, receptive, ready to discover what fits. The right artist won't need you to have all the answers. They'll ask the right questions. Together, you'll find what your skin has been waiting for. The image is coming. You just need help seeing it.",
       artistNote: {
         summary: "Needs guidance to discover what they want.",
@@ -195,7 +195,7 @@ const SKIN_SIGHT_DATA = {
       detect: (v, s) => v.incubation <= s.low && v.permanence_comfort >= s.mid,
       detectionDesc: "incubation <= low AND permanence_comfort >= mid",
       name: "The Spark",
-      oneLiner: "When I know, I know.",
+      oneLiner: "Knows in a moment. Trusts the gut.",
       revealCopy: "Some people need years. You need a feeling. When something clicks, you don't hesitate. That's not impulsive. That's instinct. You trust your gut because your gut has earned it. The idea found you and you're ready to move. Momentum is part of how you create. Don't let anyone slow you down if the fire is real.",
       artistNote: {
         summary: "Fast decision. Gut driven.",
@@ -210,7 +210,7 @@ const SKIN_SIGHT_DATA = {
       detect: (v, s) => v.creative_handoff <= s.low && v.articulation >= s.high && v.inner_vision >= s.high,
       detectionDesc: "creative_handoff <= low AND articulation >= high AND inner_vision >= high",
       name: "The Architect",
-      oneLiner: "I see it clearly. Let's build it together.",
+      oneLiner: "Leads with vision plus precision. Leaves nothing to chance.",
       revealCopy: "You've already done the work in your head. You can see it, describe it, maybe even sketch it. You're not here to hand it off and hope for the best. You want to build this together, step by step, with input at every stage. That's not control. That's care. This is your body, your vision, your story. You want to be part of how it comes to life.",
       artistNote: {
         summary: "Clear vision. Wants involvement.",
@@ -225,7 +225,7 @@ const SKIN_SIGHT_DATA = {
       detect: (v, s) => v.creative_handoff >= s.high && v.openness_to_influence >= s.high && v.canvas_state < s.high,
       detectionDesc: "creative_handoff >= high AND openness_to_influence >= high AND canvas_state < high",
       name: "The Muse",
-      oneLiner: "I came to be moved. Surprise me.",
+      oneLiner: "Comes to be moved. Trusts the eye of the artist.",
       revealCopy: "You're here to be transformed. Not by your own vision, but by someone else's eye. You trust artists to see something in you that you might not see yourself. That's not passive. That's generous. You're offering real creative collaboration, not just permission. The best piece you'll ever get might be one you never could have imagined alone.",
       artistNote: {
         summary: "Handing you creative control.",
@@ -240,7 +240,7 @@ const SKIN_SIGHT_DATA = {
       detect: (v, s) => v.inner_vision <= s.mid && v.certainty >= s.high && v.articulation >= s.mid,
       detectionDesc: "inner_vision <= mid AND certainty >= high AND articulation >= mid",
       name: "The Mythmaker",
-      oneLiner: "I'm writing my own legend.",
+      oneLiner: "Building an epic mythology on skin.",
       revealCopy: "For you, tattoos aren't decoration. They're documentation. Each piece is a marker, a symbol, a chapter in a story only you fully understand. You're not just getting ink. You're building a mythology on your skin. The meaning came before the image. The image is just how you make the meaning visible to the world.",
       artistNote: {
         summary: "Meaning driven. Narrative first.",
@@ -255,7 +255,7 @@ const SKIN_SIGHT_DATA = {
       detect: (v, s) => v.inner_vision >= s.high && v.reference_harmony >= s.high && v.certainty >= s.mid && v.canvas_state < s.high,
       detectionDesc: "inner_vision >= high AND reference_harmony >= high AND certainty >= mid AND canvas_state < high",
       name: "The Visionary",
-      oneLiner: "I see what I want. Beauty, line, form.",
+      oneLiner: "Led by the eye. Devoted to form.",
       revealCopy: "You're led by your eye. Composition, balance, how light hits the skin. You know what looks good and you trust that knowing. Meaning matters, but beauty matters too. You want something that lives well on your body and moves well through the world. The right artist will understand that for you, aesthetics aren't shallow. They're the whole point.",
       artistNote: {
         summary: "Visual first. Aesthetic driven.",
@@ -270,7 +270,7 @@ const SKIN_SIGHT_DATA = {
       detect: (v, s) => v.incubation >= s.high && v.reference_harmony >= s.high && v.iteration_comfort >= s.high && v.canvas_state < s.high,
       detectionDesc: "incubation >= high AND reference_harmony >= high AND iteration_comfort >= high AND canvas_state < high",
       name: "The Deliberate",
-      oneLiner: "I didn't rush this. Good things take time.",
+      oneLiner: "Patient by nature. Permanent by choice.",
       revealCopy: "You've been thinking about this for a while. Saving references, imagining placement, letting the idea mature. You don't move fast because you don't need to. Permanence deserves patience. When you finally book, it won't be a leap of faith. It'll be a decision you've already made a hundred times in your mind. You're not slow. You're sure.",
       artistNote: {
         summary: "Long consideration. Ready when they book.",
@@ -285,7 +285,7 @@ const SKIN_SIGHT_DATA = {
       detect: (v, s) => v.canvas_state >= s.high && v.certainty >= s.high && v.reference_harmony >= s.high,
       detectionDesc: "canvas_state >= high AND certainty >= high AND reference_harmony >= high",
       name: "The Collector",
-      oneLiner: "My skin tells stories. This is the next one.",
+      oneLiner: "A living body of work. Still in progress.",
       revealCopy: "You've done this before. Your body already holds ink, memory, meaning. You know the process, you know the healing, you know what you like. This isn't your first chapter and it won't be your last. You're not here to figure anything out. You're here to add the next piece to something you've been building for a while.",
       artistNote: {
         summary: "Experienced client. Knows the process.",
@@ -300,7 +300,7 @@ const SKIN_SIGHT_DATA = {
       detect: (v, s) => v.canvas_state >= s.mid && v.creative_handoff >= s.mid && v.openness_to_influence >= s.high && v.iteration_comfort >= s.mid,
       detectionDesc: "canvas_state >= mid AND creative_handoff >= mid AND openness_to_influence >= high AND iteration_comfort >= mid",
       name: "The Rhythm",
-      oneLiner: "I know this dance. Let's go again.",
+      oneLiner: "Never the first session. Never the last.",
       revealCopy: "The chair, the buzz, the healing. It's familiar to you now. You're not here for the novelty. You're here because this is part of how you mark your life. Getting tattooed isn't an event anymore. It's a practice. A rhythm. You know what to expect and you're ready to do it again. No drama. Just ink.",
       artistNote: {
         summary: "Repeat client energy. Knows the process.",
@@ -315,7 +315,7 @@ const SKIN_SIGHT_DATA = {
       detect: (v, s) => true, // Default fallback - always matches if nothing else does
       detectionDesc: "DEFAULT fallback when no other archetype matches",
       name: "The Attuned",
-      oneLiner: "Everything aligned. I'm ready.",
+      oneLiner: "Everything aligned. Time to make it permanent.",
       revealCopy: "You've done your homework. You know yourself, you know what you want, and you know how you like to work. There's no confusion, no second guessing, no chaos. Just clarity. You're not here to figure anything out. You're here to make it happen. The right artist will feel this energy immediately. You're the session everyone hopes for.",
       artistNote: {
         summary: "Green light client. Everything aligned.",

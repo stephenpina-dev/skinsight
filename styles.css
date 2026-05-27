@@ -539,7 +539,7 @@ p:last-child {
   text-align: center;
   opacity: 0;
   animation: revealFade 800ms ease forwards;
-  animation-delay: 900ms;
+  animation-delay: 500ms;
 }
 
 .divider {
@@ -549,14 +549,14 @@ p:last-child {
   margin: var(--space-xl) auto;
   opacity: 0;
   animation: revealFade 800ms ease forwards;
-  animation-delay: 1100ms;
+  animation-delay: 700ms;
 }
 
 /* Ink Profile */
 .ink-profile {
   opacity: 0;
   animation: revealFade 800ms ease forwards;
-  animation-delay: 1300ms;
+  animation-delay: 900ms;
   margin-bottom: var(--space-xl);
 }
 
@@ -587,6 +587,45 @@ p:last-child {
   margin-bottom: var(--space-lg);
 }
 
+/* ============================================================
+   DIRECTION A — THEMED REVEAL
+   --reveal-* custom properties are injected on #reveal by
+   applyRevealTheme() from the matched archetype's palette (the same
+   map the shareable card uses). They fall back to the site palette
+   when unset, so only the reveal screen is affected. Colours transition
+   so the palette swap fades in rather than hard-cutting.
+   ============================================================ */
+#reveal {
+  background-color: var(--reveal-bg, var(--bg-primary));
+  transition: background-color 600ms ease;
+}
+
+#reveal .ink-profile-tagline {
+  color: var(--reveal-muted, var(--text-secondary));
+  transition: color 500ms ease;
+}
+
+#reveal .ink-profile-copy {
+  color: var(--reveal-body, var(--reveal-muted, var(--text-secondary)));
+  transition: color 500ms ease;
+}
+
+#reveal .reveal-copy {
+  color: var(--reveal-body, var(--reveal-muted, var(--text-secondary)));
+  transition: color 500ms ease;
+}
+
+#reveal .divider {
+  background: var(--reveal-divider, var(--color-primary));
+  transition: background-color 500ms ease;
+}
+
+#reveal .style-tag {
+  background: rgba(var(--reveal-text-rgb, 45, 42, 38), 0.08);
+  color: var(--reveal-text, var(--text-secondary));
+  transition: background-color 500ms ease, color 500ms ease;
+}
+
 .style-matches {
   display: flex;
   flex-wrap: wrap;
@@ -609,7 +648,7 @@ p:last-child {
   margin: var(--space-xl) auto;
   opacity: 0;
   animation: revealFade 800ms ease forwards;
-  animation-delay: 1500ms;
+  animation-delay: 200ms;
 }
 
 .archetype-card-mount .archetype-card-svg {
@@ -624,7 +663,7 @@ p:last-child {
 #continue-to-details {
   opacity: 0;
   animation: revealFade 800ms ease forwards;
-  animation-delay: 1700ms;
+  animation-delay: 1100ms;
 }
 
 /* ============================================================

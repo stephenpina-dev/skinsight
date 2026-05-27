@@ -498,13 +498,10 @@
 
     const { archetype, inkProfile } = calculatedResults;
 
-    // Update archetype info
-    document.getElementById('archetype-name').textContent = archetype.name;
-    document.getElementById('archetype-oneliner').textContent = `"${archetype.oneLiner}"`;
+    // Archetype name + one-liner are now delivered by the card (below).
     document.getElementById('archetype-copy').textContent = archetype.revealCopy;
 
-    // Update ink profile info
-    document.getElementById('profile-name').textContent = inkProfile.name;
+    // Ink profile elaboration (name/eyebrow live on the card; quote + copy here)
     document.getElementById('profile-tagline').textContent = `"${inkProfile.tagline}"`;
     document.getElementById('profile-copy').textContent = inkProfile.clientCopy;
 
@@ -526,6 +523,75 @@
       const firstName = (calculatedResults.firstName || '').trim();
       cardMount.innerHTML = renderArchetypeCard(archetype.name, firstName, inkProfile.name);
     }
+
+    // Direction A: extend the matched archetype's palette across the reveal.
+    applyRevealTheme(archetype);
+  }
+
+  // ============================================================
+  // DIRECTION A — THEMED REVEAL
+  // Reuses the card's palette map (window.ARCHETYPE_CARD_PALETTES) as the
+  // single source of truth and injects it as CSS custom properties on #reveal.
+  // The reveal CSS reads them with fallbacks to the site palette.
+  // ============================================================
+
+  function applyRevealTheme(archetype) {
+    const reveal = document.getElementById('reveal');
+    if (!reveal) return;
+
+    const themed = ['--reveal-bg', '--reveal-text', '--reveal-text-rgb',
+      '--reveal-muted', '--reveal-body', '--reveal-divider'];
+    // Reset to the base site palette first, so the change can transition in.
+    themed.forEach(v => reveal.style.removeProperty(v));
+
+    const palettes = (typeof window !== 'undefined') && window.ARCHETYPE_CARD_PALETTES;
+    const p = palettes && palettes[archetype.name];
+    if (!p) return; // unknown archetype -> stay on the site palette
+
+    // Muted base: use the palette's own `small` when defined (e.g. The Muse,
+    // chosen for contrast on a mid-tone ground); otherwise soften the text
+    // toward the background for a "slightly muted" tone.
+    const muted = p.small ? p.small : mixHex(p.text, p.bg, 0.15);
+    // The Spark: long body paragraph in ember is fatiguing -> readable off-white.
+    const body = (archetype.id === 'spark') ? '#E8E1D4' : muted;
+    // Divider: accent unless its contrast on the ground is below WCAG 3:1
+    // (non-text UI), then fall back to the text colour. Self-corrects per palette.
+    const divider = contrastRatio(p.accent, p.bg) >= 3 ? p.accent : p.text;
+    const rgb = hexToRgb(p.text);
+
+    // Apply after the screen has painted its base state -> smooth fade, not a cut.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      reveal.style.setProperty('--reveal-bg', p.bg);
+      reveal.style.setProperty('--reveal-text', p.text);
+      reveal.style.setProperty('--reveal-text-rgb', rgb.r + ', ' + rgb.g + ', ' + rgb.b);
+      reveal.style.setProperty('--reveal-muted', muted);
+      reveal.style.setProperty('--reveal-body', body);
+      reveal.style.setProperty('--reveal-divider', divider);
+    }));
+  }
+
+  // --- colour helpers ---
+  function hexToRgb(hex) {
+    const h = String(hex).replace('#', '');
+    const n = h.length === 3 ? h.split('').map(c => c + c).join('') : h;
+    return { r: parseInt(n.slice(0, 2), 16), g: parseInt(n.slice(2, 4), 16), b: parseInt(n.slice(4, 6), 16) };
+  }
+
+  function mixHex(a, b, t) { // linear sRGB mix: (1-t)*a + t*b
+    const ca = hexToRgb(a), cb = hexToRgb(b);
+    const ch = k => Math.round(ca[k] + (cb[k] - ca[k]) * t).toString(16).padStart(2, '0');
+    return '#' + ch('r') + ch('g') + ch('b');
+  }
+
+  function relLuminance(c) {
+    const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+    return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+  }
+
+  function contrastRatio(hex1, hex2) {
+    const L1 = relLuminance(hexToRgb(hex1));
+    const L2 = relLuminance(hexToRgb(hex2));
+    return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
   }
 
   // ============================================================

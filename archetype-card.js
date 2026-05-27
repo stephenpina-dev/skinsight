@@ -28,7 +28,7 @@
     'The Canvas':     { bg: '#F4F1EA', text: '#3A3A38', accent: '#C2BAA8' },
     'The Spark':      { bg: '#0B0B0C', text: '#FF6A1A', accent: '#D81E2C' },
     'The Architect':  { bg: '#3E4C5E', text: '#F2EEE7', accent: '#262B32' },
-    'The Muse':       { bg: '#C29A93', text: '#FBF6EC', accent: '#C9A24B', small: '#6E4B45' },
+    'The Muse':       { bg: '#C29A93', text: '#6E4B45', accent: '#C9A24B', small: '#6E4B45', eyebrow: '#6E4B45' },
     'The Mythmaker':  { bg: '#4A1420', text: '#C9A24B', accent: '#0A0608' },
     'The Visionary':  { bg: '#0C0C0E', text: '#F4EFE2', accent: '#CBB06A' },
     'The Deliberate': { bg: '#243A2E', text: '#EFE9DA', accent: '#8A6A4A' },
@@ -221,6 +221,7 @@
   function renderArchetypeCard(archetypeName, clientFirstName, inkProfileName) {
     const p = PALETTES[archetypeName] || FALLBACK;
     const small = p.small || p.text;          // small-caps / footer colour
+    const eyebrowFill = p.eyebrow || small;   // eyebrow override (full opacity)
     const uid = 'sc' + Math.random().toString(36).slice(2, 8);
 
     const first = (clientFirstName || '').trim();
@@ -252,7 +253,7 @@
   ${bg.extra}
 
   <!-- eyebrow -->
-  <text x="${CX}" y="222" text-anchor="middle" font-family="'DM Sans', system-ui, sans-serif" font-size="30" font-weight="600" letter-spacing="8" fill="${small}" opacity="0.72">${escapeXml(eyebrow)}</text>
+  <text x="${CX}" y="222" text-anchor="middle" font-family="'DM Sans', system-ui, sans-serif" font-size="30" font-weight="600" letter-spacing="8" fill="${eyebrowFill}" opacity="${p.eyebrow ? '1' : '0.72'}">${escapeXml(eyebrow)}</text>
 
   <!-- symbol zone -->
   <g>${symbol}</g>
@@ -267,7 +268,7 @@
   <rect x="${CX - 75}" y="1456" width="150" height="3" fill="${p.accent}"/>
 
   <!-- ink profile -->
-  <text x="${CX}" y="1566" text-anchor="middle" font-family="'DM Sans', system-ui, sans-serif" font-size="27" font-weight="600" letter-spacing="6" fill="${small}" opacity="0.68">YOUR INK PROFILE</text>
+  <text x="${CX}" y="1566" text-anchor="middle" font-family="'DM Sans', system-ui, sans-serif" font-size="27" font-weight="600" letter-spacing="6" fill="${eyebrowFill}" opacity="${p.eyebrow ? '1' : '0.68'}">YOUR INK PROFILE</text>
   <text x="${CX}" y="1646" text-anchor="middle" font-family="'Fraunces', Georgia, serif" font-size="52" font-weight="600" fill="${p.text}">${profile}</text>
 
   <!-- footer -->
