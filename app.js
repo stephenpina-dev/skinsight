@@ -518,6 +518,14 @@
     } else {
       styleMatchesContainer.style.display = 'none';
     }
+
+    // Shareable archetype card (render only). No client name is collected
+    // until the details screen, so the eyebrow falls back to "YOUR ARCHETYPE".
+    const cardMount = document.getElementById('archetype-card-mount');
+    if (cardMount && typeof renderArchetypeCard === 'function') {
+      const firstName = (calculatedResults.firstName || '').trim();
+      cardMount.innerHTML = renderArchetypeCard(archetype.name, firstName, inkProfile.name);
+    }
   }
 
   // ============================================================

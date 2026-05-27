@@ -603,10 +603,28 @@ p:last-child {
   color: var(--text-secondary);
 }
 
-#continue-to-details {
+.archetype-card-mount {
+  display: flex;
+  justify-content: center;
+  margin: var(--space-xl) auto;
   opacity: 0;
   animation: revealFade 800ms ease forwards;
   animation-delay: 1500ms;
+}
+
+.archetype-card-mount .archetype-card-svg {
+  width: 340px;
+  max-width: 78vw;
+  height: auto;
+  display: block;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+}
+
+#continue-to-details {
+  opacity: 0;
+  animation: revealFade 800ms ease forwards;
+  animation-delay: 1700ms;
 }
 
 /* ============================================================
