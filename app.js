@@ -353,15 +353,17 @@
   function checkSectionComplete(section) {
     let sectionQuestions;
 
+    // NOTE: internal section keys (intuition/vision/style) are unchanged; only the
+    // visible titles and question membership changed in the reorder.
     switch (section) {
-      case 'intuition':
-        sectionQuestions = ['incubation', 'permanence_comfort', 'body_intuition', 'canvas_state'];
+      case 'intuition': // "Your Instinct" — reference_harmony is the warm-up
+        sectionQuestions = ['reference_harmony', 'body_intuition', 'incubation', 'inner_vision'];
         break;
-      case 'vision':
-        sectionQuestions = ['inner_vision', 'reference_harmony', 'density_appetite', 'certainty'];
+      case 'vision': // "Your Process"
+        sectionQuestions = ['certainty', 'creative_handoff', 'openness_to_influence', 'iteration_comfort'];
         break;
-      case 'style':
-        sectionQuestions = ['creative_handoff', 'iteration_comfort', 'openness_to_influence', 'articulation'];
+      case 'style': // "Your Depth"
+        sectionQuestions = ['canvas_state', 'density_appetite', 'permanence_comfort', 'articulation'];
         break;
       default:
         return;
@@ -496,13 +498,10 @@
 
     const { archetype, inkProfile } = calculatedResults;
 
-    // Update archetype info
-    document.getElementById('archetype-name').textContent = archetype.name;
-    document.getElementById('archetype-oneliner').textContent = `"${archetype.oneLiner}"`;
+    // Archetype name + one-liner are now delivered by the card (below).
     document.getElementById('archetype-copy').textContent = archetype.revealCopy;
 
-    // Update ink profile info
-    document.getElementById('profile-name').textContent = inkProfile.name;
+    // Ink profile elaboration (name/eyebrow live on the card; quote + copy here)
     document.getElementById('profile-tagline').textContent = `"${inkProfile.tagline}"`;
     document.getElementById('profile-copy').textContent = inkProfile.clientCopy;
 
@@ -516,6 +515,156 @@
     } else {
       styleMatchesContainer.style.display = 'none';
     }
+
+    // Shareable archetype card (render only). No client name is collected
+    // until the details screen, so the eyebrow falls back to "YOUR ARCHETYPE".
+    const cardMount = document.getElementById('archetype-card-mount');
+    if (cardMount && typeof renderArchetypeCard === 'function') {
+      const firstName = (calculatedResults.firstName || '').trim();
+      cardMount.innerHTML = renderArchetypeCard(archetype.name, firstName, inkProfile.name);
+    }
+
+    // Direction A: extend the matched archetype's palette across the reveal.
+    applyRevealTheme(archetype);
+  }
+
+  // ============================================================
+  // DIRECTION A — THEMED FLOW (reveal -> details -> confirmation)
+  // Reuses the card's palette map (window.ARCHETYPE_CARD_PALETTES) as the
+  // single source of truth and injects it as CSS custom properties:
+  //   #reveal + #confirmation  -> FULL-saturation `--reveal-*` (shared set)
+  //   #details                 -> its own `--details-*` scope, page bg = bgWashed,
+  //                               text/accent reused from the same palette
+  // The neutral cream form card on #details keeps inputs standard, so only the
+  // page background, the heading, the intro copy and the buttons pick up theme.
+  // CSS reads every var with a fallback to the site palette, so non-themed
+  // screens (landing, quiz) are untouched.
+  // ============================================================
+
+  // Pick the higher-contrast label colour (site ink vs white) for a given
+  // background. Used for any filled accent surface (CTA buttons, the
+  // confirmation check) so the label is legible whatever the accent is.
+  const THEME_INK = '#2D2A26';
+  function readableOn(bg) {
+    return contrastRatio('#FFFFFF', bg) >= contrastRatio(THEME_INK, bg) ? '#FFFFFF' : THEME_INK;
+  }
+
+  function applyRevealTheme(archetype) {
+    const reveal = document.getElementById('reveal');
+    const confirmation = document.getElementById('confirmation');
+    const details = document.getElementById('details');
+
+    const revealVars = ['--reveal-bg', '--reveal-text', '--reveal-text-rgb',
+      '--reveal-muted', '--reveal-body', '--reveal-divider', '--reveal-accent',
+      '--reveal-cta-bg', '--reveal-cta-fg'];
+    const detailsVars = ['--details-bg', '--details-text', '--details-muted',
+      '--details-accent', '--details-cta-bg', '--details-cta-fg'];
+    // Reset to the base site palette first, so the change can transition in.
+    [reveal, confirmation].forEach(el => el && revealVars.forEach(v => el.style.removeProperty(v)));
+    if (details) detailsVars.forEach(v => details.style.removeProperty(v));
+
+    const palettes = (typeof window !== 'undefined') && window.ARCHETYPE_CARD_PALETTES;
+    const p = palettes && palettes[archetype.name];
+    if (!p) return; // unknown archetype -> stay on the site palette
+
+    // --- full-saturation set (reveal + confirmation) ---
+    // Muted base: use the palette's own `small` when defined (e.g. The Muse,
+    // chosen for contrast on a mid-tone ground); otherwise soften the text
+    // toward the background for a "slightly muted" tone.
+    const muted = p.small ? p.small : mixHex(p.text, p.bg, 0.15);
+    // The Spark: long body paragraph in ember is fatiguing -> readable off-white.
+    const body = (archetype.id === 'spark') ? '#E8E1D4' : muted;
+    // Divider: accent unless its contrast on the ground is below WCAG 3:1
+    // (non-text UI), then fall back to the text colour. Self-corrects per palette.
+    const divider = contrastRatio(p.accent, p.bg) >= 3 ? p.accent : p.text;
+    // CTA: accent fill with an auto-selected legible label (works for the light
+    // golds AND the near-black accents).
+    const ctaFg = readableOn(p.accent);
+    // Heading + body copy on the reveal/confirmation ground: self-correct to AA
+    // the same way --details-text does below. No-op for every palette whose text
+    // already clears 4.5:1 (all dark grounds + Spark's hardcoded off-white body);
+    // darkens the low-contrast light/mid grounds toward #000 until legible --
+    // The Attuned (#A9772A 3.70:1 text / 2.96:1 body) and The Muse (#6E4B45
+    // 3.03:1) today. --reveal-text-rgb (8% tag/btn fills) tracks the corrected text.
+    const revealText = darkenUntilAA(p.text, p.bg);
+    const revealBody = darkenUntilAA(body, p.bg);
+    const rgb = hexToRgb(revealText);
+
+    // --- washed set (details) ---
+    // Intro paragraph (body size) on the washed ground: prefer a themed muted,
+    // fall back to a neutral mid-grey, then to full text -- whichever first
+    // clears WCAG 4.5:1 on bgWashed. Self-correcting like the divider above.
+    let detailsMuted = mixHex(p.text, p.bgWashed, 0.16);
+    if (contrastRatio(detailsMuted, p.bgWashed) < 4.5) {
+      detailsMuted = contrastRatio('#6B6256', p.bgWashed) >= 4.5 ? '#6B6256' : p.text;
+    }
+
+    // Heading/body text on the washed ground: same AA self-correct as the reveal
+    // text above. Every palette's `text` was tuned to clear 4.5:1 on its own
+    // bgWashed except The Attuned (mid-gold #A9772A at 3.19:1; tops out at 3.92:1
+    // even on pure white, so it can't be fixed by lightening the ground).
+    const detailsText = darkenUntilAA(p.text, p.bgWashed);
+
+    // Apply after the screen has painted its base state -> smooth fade, not a cut.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      [reveal, confirmation].forEach(el => {
+        if (!el) return;
+        el.style.setProperty('--reveal-bg', p.bg);
+        el.style.setProperty('--reveal-text', revealText);
+        el.style.setProperty('--reveal-text-rgb', rgb.r + ', ' + rgb.g + ', ' + rgb.b);
+        el.style.setProperty('--reveal-muted', muted);
+        el.style.setProperty('--reveal-body', revealBody);
+        el.style.setProperty('--reveal-divider', divider);
+        el.style.setProperty('--reveal-accent', p.accent);
+        el.style.setProperty('--reveal-cta-bg', p.accent);
+        el.style.setProperty('--reveal-cta-fg', ctaFg);
+      });
+      if (details) {
+        details.style.setProperty('--details-bg', p.bgWashed);
+        details.style.setProperty('--details-text', detailsText);
+        details.style.setProperty('--details-muted', detailsMuted);
+        details.style.setProperty('--details-accent', p.accent);
+        details.style.setProperty('--details-cta-bg', p.accent);
+        details.style.setProperty('--details-cta-fg', ctaFg);
+      }
+    }));
+  }
+
+  // --- colour helpers ---
+  function hexToRgb(hex) {
+    const h = String(hex).replace('#', '');
+    const n = h.length === 3 ? h.split('').map(c => c + c).join('') : h;
+    return { r: parseInt(n.slice(0, 2), 16), g: parseInt(n.slice(2, 4), 16), b: parseInt(n.slice(4, 6), 16) };
+  }
+
+  function mixHex(a, b, t) { // linear sRGB mix: (1-t)*a + t*b
+    const ca = hexToRgb(a), cb = hexToRgb(b);
+    const ch = k => Math.round(ca[k] + (cb[k] - ca[k]) * t).toString(16).padStart(2, '0');
+    return '#' + ch('r') + ch('g') + ch('b');
+  }
+
+  function relLuminance(c) {
+    const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+    return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+  }
+
+  function contrastRatio(hex1, hex2) {
+    const L1 = relLuminance(hexToRgb(hex1));
+    const L2 = relLuminance(hexToRgb(hex2));
+    return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+  }
+
+  // Darken `color` toward #000 in small steps until it clears WCAG AA normal-
+  // text contrast (4.5:1) on `ground`. Returns `color` unchanged when it already
+  // passes -> a no-op for every palette tuned to clear AA. Used to self-correct
+  // themed text on light/mid grounds (The Attuned's mid-gold, The Muse's brown)
+  // without hand-editing palettes, so custom shop palettes stay legible too.
+  function darkenUntilAA(color, ground) {
+    let out = color;
+    for (let t = 0.05; contrastRatio(out, ground) < 4.5 && t <= 1; t += 0.05) {
+      out = mixHex(color, '#000000', t);
+    }
+    return out;
   }
 
   // ============================================================
@@ -682,9 +831,27 @@
 
   function showLoading(show) {
     const overlay = document.getElementById('loading-overlay');
-    if (overlay) {
-      overlay.style.display = show ? 'flex' : 'none';
+    if (!overlay) return;
+    if (show) {
+      // Loading state inherits the screen it transitions from: take that
+      // screen's resolved background + themed fg/accent so the spinner and
+      // "Submitting..." copy stay legible (e.g. over a dark washed details page).
+      const active = document.querySelector('.screen.active');
+      if (active) {
+        const cs = getComputedStyle(active);
+        const bg = cs.backgroundColor;
+        const fg = (cs.getPropertyValue('--details-text') || cs.getPropertyValue('--reveal-text')).trim();
+        const accent = (cs.getPropertyValue('--details-accent') || cs.getPropertyValue('--reveal-accent')).trim();
+        if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+          overlay.style.background = bg.replace(/^rgb\(([^)]+)\)$/, 'rgba($1, 0.96)');
+        } else {
+          overlay.style.removeProperty('background');
+        }
+        overlay.style.setProperty('--loading-fg', fg || '');
+        overlay.style.setProperty('--loading-accent', accent || '');
+      }
     }
+    overlay.style.display = show ? 'flex' : 'none';
   }
 
   function buildSubmissionData(formData, details) {
