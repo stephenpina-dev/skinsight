@@ -577,10 +577,18 @@
     // Divider: accent unless its contrast on the ground is below WCAG 3:1
     // (non-text UI), then fall back to the text colour. Self-corrects per palette.
     const divider = contrastRatio(p.accent, p.bg) >= 3 ? p.accent : p.text;
-    const rgb = hexToRgb(p.text);
     // CTA: accent fill with an auto-selected legible label (works for the light
     // golds AND the near-black accents).
     const ctaFg = readableOn(p.accent);
+    // Heading + body copy on the reveal/confirmation ground: self-correct to AA
+    // the same way --details-text does below. No-op for every palette whose text
+    // already clears 4.5:1 (all dark grounds + Spark's hardcoded off-white body);
+    // darkens the low-contrast light/mid grounds toward #000 until legible --
+    // The Attuned (#A9772A 3.70:1 text / 2.96:1 body) and The Muse (#6E4B45
+    // 3.03:1) today. --reveal-text-rgb (8% tag/btn fills) tracks the corrected text.
+    const revealText = darkenUntilAA(p.text, p.bg);
+    const revealBody = darkenUntilAA(body, p.bg);
+    const rgb = hexToRgb(revealText);
 
     // --- washed set (details) ---
     // Intro paragraph (body size) on the washed ground: prefer a themed muted,
@@ -591,27 +599,21 @@
       detailsMuted = contrastRatio('#6B6256', p.bgWashed) >= 4.5 ? '#6B6256' : p.text;
     }
 
-    // Heading/body text on the washed ground: every palette's `text` was tuned
-    // to clear WCAG 4.5:1 on its own bgWashed -- except The Attuned, whose
-    // mid-gold #A9772A sits at 3.19:1 on its cream ground (and tops out at
-    // 3.92:1 even on pure white, so it can't be fixed by lightening the ground).
-    // Self-correct like detailsMuted above: if text falls below 4.5:1, darken it
-    // toward #000 until it clears. Only triggers for failing LIGHT-ground palettes
-    // (Attuned today), where darkening is the correct direction.
-    let detailsText = p.text;
-    for (let t = 0.05; contrastRatio(detailsText, p.bgWashed) < 4.5 && t <= 1; t += 0.05) {
-      detailsText = mixHex(p.text, '#000000', t);
-    }
+    // Heading/body text on the washed ground: same AA self-correct as the reveal
+    // text above. Every palette's `text` was tuned to clear 4.5:1 on its own
+    // bgWashed except The Attuned (mid-gold #A9772A at 3.19:1; tops out at 3.92:1
+    // even on pure white, so it can't be fixed by lightening the ground).
+    const detailsText = darkenUntilAA(p.text, p.bgWashed);
 
     // Apply after the screen has painted its base state -> smooth fade, not a cut.
     requestAnimationFrame(() => requestAnimationFrame(() => {
       [reveal, confirmation].forEach(el => {
         if (!el) return;
         el.style.setProperty('--reveal-bg', p.bg);
-        el.style.setProperty('--reveal-text', p.text);
+        el.style.setProperty('--reveal-text', revealText);
         el.style.setProperty('--reveal-text-rgb', rgb.r + ', ' + rgb.g + ', ' + rgb.b);
         el.style.setProperty('--reveal-muted', muted);
-        el.style.setProperty('--reveal-body', body);
+        el.style.setProperty('--reveal-body', revealBody);
         el.style.setProperty('--reveal-divider', divider);
         el.style.setProperty('--reveal-accent', p.accent);
         el.style.setProperty('--reveal-cta-bg', p.accent);
@@ -650,6 +652,19 @@
     const L1 = relLuminance(hexToRgb(hex1));
     const L2 = relLuminance(hexToRgb(hex2));
     return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+  }
+
+  // Darken `color` toward #000 in small steps until it clears WCAG AA normal-
+  // text contrast (4.5:1) on `ground`. Returns `color` unchanged when it already
+  // passes -> a no-op for every palette tuned to clear AA. Used to self-correct
+  // themed text on light/mid grounds (The Attuned's mid-gold, The Muse's brown)
+  // without hand-editing palettes, so custom shop palettes stay legible too.
+  function darkenUntilAA(color, ground) {
+    let out = color;
+    for (let t = 0.05; contrastRatio(out, ground) < 4.5 && t <= 1; t += 0.05) {
+      out = mixHex(color, '#000000', t);
+    }
+    return out;
   }
 
   // ============================================================
