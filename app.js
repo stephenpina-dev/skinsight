@@ -529,25 +529,45 @@
   }
 
   // ============================================================
-  // DIRECTION A — THEMED REVEAL
+  // DIRECTION A — THEMED FLOW (reveal -> details -> confirmation)
   // Reuses the card's palette map (window.ARCHETYPE_CARD_PALETTES) as the
-  // single source of truth and injects it as CSS custom properties on #reveal.
-  // The reveal CSS reads them with fallbacks to the site palette.
+  // single source of truth and injects it as CSS custom properties:
+  //   #reveal + #confirmation  -> FULL-saturation `--reveal-*` (shared set)
+  //   #details                 -> its own `--details-*` scope, page bg = bgWashed,
+  //                               text/accent reused from the same palette
+  // The neutral cream form card on #details keeps inputs standard, so only the
+  // page background, the heading, the intro copy and the buttons pick up theme.
+  // CSS reads every var with a fallback to the site palette, so non-themed
+  // screens (landing, quiz) are untouched.
   // ============================================================
+
+  // Pick the higher-contrast label colour (site ink vs white) for a given
+  // background. Used for any filled accent surface (CTA buttons, the
+  // confirmation check) so the label is legible whatever the accent is.
+  const THEME_INK = '#2D2A26';
+  function readableOn(bg) {
+    return contrastRatio('#FFFFFF', bg) >= contrastRatio(THEME_INK, bg) ? '#FFFFFF' : THEME_INK;
+  }
 
   function applyRevealTheme(archetype) {
     const reveal = document.getElementById('reveal');
-    if (!reveal) return;
+    const confirmation = document.getElementById('confirmation');
+    const details = document.getElementById('details');
 
-    const themed = ['--reveal-bg', '--reveal-text', '--reveal-text-rgb',
-      '--reveal-muted', '--reveal-body', '--reveal-divider'];
+    const revealVars = ['--reveal-bg', '--reveal-text', '--reveal-text-rgb',
+      '--reveal-muted', '--reveal-body', '--reveal-divider', '--reveal-accent',
+      '--reveal-cta-bg', '--reveal-cta-fg'];
+    const detailsVars = ['--details-bg', '--details-text', '--details-muted',
+      '--details-accent', '--details-cta-bg', '--details-cta-fg'];
     // Reset to the base site palette first, so the change can transition in.
-    themed.forEach(v => reveal.style.removeProperty(v));
+    [reveal, confirmation].forEach(el => el && revealVars.forEach(v => el.style.removeProperty(v)));
+    if (details) detailsVars.forEach(v => details.style.removeProperty(v));
 
     const palettes = (typeof window !== 'undefined') && window.ARCHETYPE_CARD_PALETTES;
     const p = palettes && palettes[archetype.name];
     if (!p) return; // unknown archetype -> stay on the site palette
 
+    // --- full-saturation set (reveal + confirmation) ---
     // Muted base: use the palette's own `small` when defined (e.g. The Muse,
     // chosen for contrast on a mid-tone ground); otherwise soften the text
     // toward the background for a "slightly muted" tone.
@@ -558,15 +578,41 @@
     // (non-text UI), then fall back to the text colour. Self-corrects per palette.
     const divider = contrastRatio(p.accent, p.bg) >= 3 ? p.accent : p.text;
     const rgb = hexToRgb(p.text);
+    // CTA: accent fill with an auto-selected legible label (works for the light
+    // golds AND the near-black accents).
+    const ctaFg = readableOn(p.accent);
+
+    // --- washed set (details) ---
+    // Intro paragraph (body size) on the washed ground: prefer a themed muted,
+    // fall back to a neutral mid-grey, then to full text -- whichever first
+    // clears WCAG 4.5:1 on bgWashed. Self-correcting like the divider above.
+    let detailsMuted = mixHex(p.text, p.bgWashed, 0.16);
+    if (contrastRatio(detailsMuted, p.bgWashed) < 4.5) {
+      detailsMuted = contrastRatio('#6B6256', p.bgWashed) >= 4.5 ? '#6B6256' : p.text;
+    }
 
     // Apply after the screen has painted its base state -> smooth fade, not a cut.
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      reveal.style.setProperty('--reveal-bg', p.bg);
-      reveal.style.setProperty('--reveal-text', p.text);
-      reveal.style.setProperty('--reveal-text-rgb', rgb.r + ', ' + rgb.g + ', ' + rgb.b);
-      reveal.style.setProperty('--reveal-muted', muted);
-      reveal.style.setProperty('--reveal-body', body);
-      reveal.style.setProperty('--reveal-divider', divider);
+      [reveal, confirmation].forEach(el => {
+        if (!el) return;
+        el.style.setProperty('--reveal-bg', p.bg);
+        el.style.setProperty('--reveal-text', p.text);
+        el.style.setProperty('--reveal-text-rgb', rgb.r + ', ' + rgb.g + ', ' + rgb.b);
+        el.style.setProperty('--reveal-muted', muted);
+        el.style.setProperty('--reveal-body', body);
+        el.style.setProperty('--reveal-divider', divider);
+        el.style.setProperty('--reveal-accent', p.accent);
+        el.style.setProperty('--reveal-cta-bg', p.accent);
+        el.style.setProperty('--reveal-cta-fg', ctaFg);
+      });
+      if (details) {
+        details.style.setProperty('--details-bg', p.bgWashed);
+        details.style.setProperty('--details-text', p.text);
+        details.style.setProperty('--details-muted', detailsMuted);
+        details.style.setProperty('--details-accent', p.accent);
+        details.style.setProperty('--details-cta-bg', p.accent);
+        details.style.setProperty('--details-cta-fg', ctaFg);
+      }
     }));
   }
 
@@ -758,9 +804,27 @@
 
   function showLoading(show) {
     const overlay = document.getElementById('loading-overlay');
-    if (overlay) {
-      overlay.style.display = show ? 'flex' : 'none';
+    if (!overlay) return;
+    if (show) {
+      // Loading state inherits the screen it transitions from: take that
+      // screen's resolved background + themed fg/accent so the spinner and
+      // "Submitting..." copy stay legible (e.g. over a dark washed details page).
+      const active = document.querySelector('.screen.active');
+      if (active) {
+        const cs = getComputedStyle(active);
+        const bg = cs.backgroundColor;
+        const fg = (cs.getPropertyValue('--details-text') || cs.getPropertyValue('--reveal-text')).trim();
+        const accent = (cs.getPropertyValue('--details-accent') || cs.getPropertyValue('--reveal-accent')).trim();
+        if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+          overlay.style.background = bg.replace(/^rgb\(([^)]+)\)$/, 'rgba($1, 0.96)');
+        } else {
+          overlay.style.removeProperty('background');
+        }
+        overlay.style.setProperty('--loading-fg', fg || '');
+        overlay.style.setProperty('--loading-accent', accent || '');
+      }
     }
+    overlay.style.display = show ? 'flex' : 'none';
   }
 
   function buildSubmissionData(formData, details) {

@@ -406,9 +406,11 @@
         <h2>Almost done</h2>
         <p class="text-secondary">A few details to help your artist prepare.</p>
 
-        <div id="form-errors" class="form-errors" role="alert" aria-live="polite"></div>
-
         <form id="details-form" novalidate>
+
+          <!-- Errors render inside the neutral cream card, so no per-archetype
+               theming is needed for legibility on dark washed grounds. -->
+          <div id="form-errors" class="form-errors" role="alert" aria-live="polite"></div>
 
           <!-- Placement -->
           <div class="form-group">

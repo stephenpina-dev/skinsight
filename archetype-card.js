@@ -21,23 +21,30 @@
 
   // ----- 3-color palettes (bg / text / accent). Optional `small` overrides
   // the colour used for small-caps + footer text where the mid-tone ground
-  // would otherwise hurt legibility. ----------------------------------------
+  // would otherwise hurt legibility.
+  //
+  // `bgWashed` is a HAND-PICKED desaturated ground used ONLY as the page
+  // background of the details screen (the cream form card floats on top of it).
+  // It is NOT computed from `bg`: light archetypes get a soft deeper tint,
+  // dark archetypes get a softened lift off pure black/deep — every value was
+  // tuned so the archetype `text` stays legible on it (see styles.css #details).
+  // ----------------------------------------
   const PALETTES = {
-    'The Debut':      { bg: '#F5EFE3', text: '#5C4A3A', accent: '#C9A24B' },
-    'The Compass':    { bg: '#1C2B3A', text: '#EDE8DD', accent: '#B08D57' },
-    'The Canvas':     { bg: '#F4F1EA', text: '#3A3A38', accent: '#C2BAA8' },
-    'The Spark':      { bg: '#0B0B0C', text: '#FF6A1A', accent: '#D81E2C' },
-    'The Architect':  { bg: '#3E4C5E', text: '#F2EEE7', accent: '#262B32' },
-    'The Muse':       { bg: '#C29A93', text: '#6E4B45', accent: '#C9A24B', small: '#6E4B45', eyebrow: '#6E4B45' },
-    'The Mythmaker':  { bg: '#4A1420', text: '#C9A24B', accent: '#0A0608' },
-    'The Visionary':  { bg: '#0C0C0E', text: '#F4EFE2', accent: '#CBB06A' },
-    'The Deliberate': { bg: '#243A2E', text: '#EFE9DA', accent: '#8A6A4A' },
-    'The Collector':  { bg: '#E8DEC8', text: '#4A3826', accent: '#1A1410' },
-    'The Rhythm':     { bg: '#335E5B', text: '#EFE9DA', accent: '#9B9389' },
-    'The Attuned':    { bg: '#FCF8EF', text: '#A9772A', accent: '#F2C14E' }
+    'The Debut':      { bg: '#F5EFE3', text: '#5C4A3A', accent: '#C9A24B', bgWashed: '#EFE4D2' },
+    'The Compass':    { bg: '#1C2B3A', text: '#EDE8DD', accent: '#B08D57', bgWashed: '#2F4254' },
+    'The Canvas':     { bg: '#F4F1EA', text: '#3A3A38', accent: '#C2BAA8', bgWashed: '#E8E4DA' },
+    'The Spark':      { bg: '#0B0B0C', text: '#FF6A1A', accent: '#D81E2C', bgWashed: '#1C1819' },
+    'The Architect':  { bg: '#3E4C5E', text: '#F2EEE7', accent: '#262B32', bgWashed: '#455366' },
+    'The Muse':       { bg: '#C29A93', text: '#6E4B45', accent: '#C9A24B', small: '#6E4B45', eyebrow: '#6E4B45', bgWashed: '#DCC3BD' },
+    'The Mythmaker':  { bg: '#4A1420', text: '#C9A24B', accent: '#0A0608', bgWashed: '#5A1F2B' },
+    'The Visionary':  { bg: '#0C0C0E', text: '#F4EFE2', accent: '#CBB06A', bgWashed: '#17161A' },
+    'The Deliberate': { bg: '#243A2E', text: '#EFE9DA', accent: '#8A6A4A', bgWashed: '#314A3C' },
+    'The Collector':  { bg: '#E8DEC8', text: '#4A3826', accent: '#1A1410', bgWashed: '#E0D5BB' },
+    'The Rhythm':     { bg: '#335E5B', text: '#EFE9DA', accent: '#9B9389', bgWashed: '#3F6C69' },
+    'The Attuned':    { bg: '#FCF8EF', text: '#A9772A', accent: '#F2C14E', bgWashed: '#F2E7CE' }
   };
 
-  const FALLBACK = { bg: '#F4F1EA', text: '#3A3A38', accent: '#C2BAA8' };
+  const FALLBACK = { bg: '#F4F1EA', text: '#3A3A38', accent: '#C2BAA8', bgWashed: '#E8E4DA' };
 
   // ----- geometry constants (in viewBox units) -----------------------------
   const W = 1080, H = 1920;

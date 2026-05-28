@@ -666,9 +666,29 @@ p:last-child {
   animation-delay: 1100ms;
 }
 
+/* Primary CTA on the reveal -> archetype accent fill, auto-legible label.
+   "Sienna" (the site brand primary) is dropped across the whole themed flow. */
+#reveal .btn-primary {
+  background-color: var(--reveal-cta-bg, var(--color-primary));
+  color: var(--reveal-cta-fg, #fff);
+  transition: background-color 500ms ease, color 500ms ease;
+}
+
+#reveal .btn-primary:hover:not(:disabled) {
+  filter: brightness(0.94);
+}
+
 /* ============================================================
    DETAILS FORM
    ============================================================ */
+
+/* Details page is themed with the archetype's WASHED ground; the form itself
+   sits on a neutral cream card (below) so inputs stay standard. Heading +
+   intro copy reuse the archetype text; everything inside the card stays neutral. */
+#details {
+  background-color: var(--details-bg, var(--bg-primary));
+  transition: background-color 600ms ease;
+}
 
 #details .container {
   max-width: 100%;
@@ -677,11 +697,26 @@ p:last-child {
 #details h2 {
   text-align: center;
   margin-bottom: var(--space-xs);
+  color: var(--details-text, var(--text-primary));
+  transition: color 500ms ease;
 }
 
 #details > .container > p {
   text-align: center;
   margin-bottom: var(--space-xl);
+  color: var(--details-muted, var(--text-secondary));
+  transition: color 500ms ease;
+}
+
+/* Neutral cream form card floating on the themed page. Shadow + hairline keep
+   it reading as a distinct surface on the LIGHT washes (where the card and the
+   page are near-equal in value); on dark washes it simply pops. */
+#details-form {
+  background: #F6F0E6;
+  border: 1px solid rgba(45, 42, 38, 0.08);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl) var(--space-lg);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
 }
 
 /* Form Errors */
@@ -972,18 +1007,38 @@ textarea::placeholder {
   margin: var(--space-xl) 0;
 }
 
+#details .form-divider {
+  background: var(--details-accent, var(--border-color));
+  opacity: 0.45;
+}
+
 .form-section-title {
   margin-bottom: var(--space-lg);
 }
 
-/* Submit Button */
+/* Submit Button -> archetype accent fill, auto-legible label (same rule as
+   the reveal CTA). */
 #details-form .btn-large {
   margin-top: var(--space-lg);
+  background-color: var(--details-cta-bg, var(--color-primary));
+  color: var(--details-cta-fg, #fff);
+  transition: background-color 500ms ease, color 500ms ease;
+}
+
+#details-form .btn-large:hover:not(:disabled) {
+  filter: brightness(0.94);
 }
 
 /* ============================================================
    CONFIRMATION SCREEN
    ============================================================ */
+
+/* Confirmation is the "success" screen: same FULL-saturation --reveal-* set
+   as the reveal, so the closing screen matches the archetype reveal exactly. */
+#confirmation {
+  background-color: var(--reveal-bg, var(--bg-primary));
+  transition: background-color 600ms ease;
+}
 
 #confirmation .container {
   display: flex;
@@ -1000,23 +1055,51 @@ textarea::placeholder {
   justify-content: center;
   width: 80px;
   height: 80px;
-  background: var(--color-success);
+  background: var(--reveal-accent, var(--color-success));
   border-radius: 50%;
   font-size: 2rem;
-  color: white;
+  color: var(--reveal-cta-fg, #fff);
   margin-bottom: var(--space-xl);
+  transition: background-color 500ms ease, color 500ms ease;
 }
 
 #confirmation h2 {
   margin-bottom: var(--space-sm);
+  color: var(--reveal-text, var(--text-primary));
+  transition: color 500ms ease;
 }
 
 #confirmation p {
   margin-bottom: var(--space-xl);
+  color: var(--reveal-body, var(--reveal-muted, var(--text-secondary)));
+  transition: color 500ms ease;
 }
 
+/* Book Now -> accent fill, auto-legible label (shared CTA rule). */
 #confirmation .btn-primary {
   margin-bottom: var(--space-md);
+  background-color: var(--reveal-cta-bg, var(--color-primary));
+  color: var(--reveal-cta-fg, #fff);
+  transition: background-color 500ms ease, color 500ms ease;
+}
+
+#confirmation .btn-primary:hover:not(:disabled) {
+  filter: brightness(0.94);
+}
+
+/* Retake Quiz -> reads as secondary on every palette: transparent ground,
+   archetype text label, hairline border. The border uses --reveal-divider
+   (accent when it clears 3:1 on the ground, else the text colour) so it
+   self-corrects on low-contrast palettes like The Muse instead of vanishing. */
+#confirmation .btn-secondary {
+  background-color: transparent;
+  color: var(--reveal-text, var(--text-secondary));
+  border-color: var(--reveal-divider, var(--border-color));
+  transition: color 500ms ease, border-color 500ms ease, background-color var(--transition-fast);
+}
+
+#confirmation .btn-secondary:hover:not(:disabled) {
+  background-color: rgba(var(--reveal-text-rgb, 45, 42, 38), 0.08);
 }
 
 /* ============================================================
@@ -1040,8 +1123,8 @@ textarea::placeholder {
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid var(--border-color);
-  border-top-color: var(--color-primary);
+  border: 3px solid rgba(125, 117, 106, 0.35);
+  border-top-color: var(--loading-accent, var(--color-primary));
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: var(--space-md);
@@ -1051,8 +1134,10 @@ textarea::placeholder {
   to { transform: rotate(360deg); }
 }
 
+/* Loading copy + spinner accent inherit the originating screen's theme
+   (set inline by showLoading); fall back to the site palette. */
 .loading-overlay p {
-  color: var(--text-secondary);
+  color: var(--loading-fg, var(--text-secondary));
 }
 
 /* ============================================================
