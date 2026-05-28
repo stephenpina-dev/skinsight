@@ -872,5 +872,14 @@ const TEST_PRESETS = {
       creative_handoff: 9, iteration_comfort: 9, openness_to_influence: 9, articulation: 9
     },
     expected: { archetype: "collector", signal: "clear" }
+  },
+  the_spark: {
+    name: "The Spark",
+    values: {
+      incubation: 2, permanence_comfort: 9, body_intuition: 5, canvas_state: 5,
+      inner_vision: 5, reference_harmony: 5, density_appetite: 9, certainty: 5,
+      creative_handoff: 5, iteration_comfort: 5, openness_to_influence: 5, articulation: 5
+    },
+    expected: { archetype: "spark", inkProfile: "full_canvas" }
   }
 };

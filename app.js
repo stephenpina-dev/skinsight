@@ -591,6 +591,18 @@
       detailsMuted = contrastRatio('#6B6256', p.bgWashed) >= 4.5 ? '#6B6256' : p.text;
     }
 
+    // Heading/body text on the washed ground: every palette's `text` was tuned
+    // to clear WCAG 4.5:1 on its own bgWashed -- except The Attuned, whose
+    // mid-gold #A9772A sits at 3.19:1 on its cream ground (and tops out at
+    // 3.92:1 even on pure white, so it can't be fixed by lightening the ground).
+    // Self-correct like detailsMuted above: if text falls below 4.5:1, darken it
+    // toward #000 until it clears. Only triggers for failing LIGHT-ground palettes
+    // (Attuned today), where darkening is the correct direction.
+    let detailsText = p.text;
+    for (let t = 0.05; contrastRatio(detailsText, p.bgWashed) < 4.5 && t <= 1; t += 0.05) {
+      detailsText = mixHex(p.text, '#000000', t);
+    }
+
     // Apply after the screen has painted its base state -> smooth fade, not a cut.
     requestAnimationFrame(() => requestAnimationFrame(() => {
       [reveal, confirmation].forEach(el => {
@@ -607,7 +619,7 @@
       });
       if (details) {
         details.style.setProperty('--details-bg', p.bgWashed);
-        details.style.setProperty('--details-text', p.text);
+        details.style.setProperty('--details-text', detailsText);
         details.style.setProperty('--details-muted', detailsMuted);
         details.style.setProperty('--details-accent', p.accent);
         details.style.setProperty('--details-cta-bg', p.accent);
