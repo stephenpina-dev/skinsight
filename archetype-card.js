@@ -278,9 +278,8 @@
   <text x="${CX}" y="1566" text-anchor="middle" font-family="'DM Sans', system-ui, sans-serif" font-size="27" font-weight="600" letter-spacing="6" fill="${eyebrowFill}" opacity="${p.eyebrow ? '1' : '0.68'}">YOUR INK PROFILE</text>
   <text x="${CX}" y="1646" text-anchor="middle" font-family="'Fraunces', Georgia, serif" font-size="52" font-weight="600" fill="${p.text}">${profile}</text>
 
-  <!-- footer -->
-  <text x="${CX}" y="1814" text-anchor="middle" font-family="'DM Sans', system-ui, sans-serif" font-size="30" font-weight="600" letter-spacing="10" fill="${small}">SKIN SIGHT</text>
-  <text x="${CX}" y="1860" text-anchor="middle" font-family="'DM Sans', system-ui, sans-serif" font-size="22" font-weight="400" letter-spacing="4" fill="${small}" opacity="0.6">skinsight.ink</text>
+  <!-- footer: single-line wordmark + URL lockup -->
+  <text x="${CX}" y="1832" text-anchor="middle" font-family="'DM Sans', system-ui, sans-serif" font-size="28" font-weight="600" letter-spacing="6" fill="${small}">SKIN SIGHT · skinsight.ink</text>
 </svg>`;
   }
 
